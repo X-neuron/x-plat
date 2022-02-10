@@ -4,9 +4,10 @@
  */
 import { extend } from "umi-request";
 import { notification } from "antd";
-
+import paramConfig from "@/config/params";
+import { isUrl } from "@/utils/is";
 // change to your api backend
-const baseUrl = "http://localhost:3000/api/v1"
+const baseUrl = paramConfig.requestBaseUrl;
 
 const codeMessage = {
   200: "服务器成功返回请求的数据。",
@@ -18,6 +19,7 @@ const codeMessage = {
   403: "用户得到授权，但是访问是被禁止的。",
   404: "发出的请求针对的是不存在的记录，服务器没有进行操作。",
   406: "请求的格式不可得。",
+  409: "请求资源冲突。",
   410: "请求的资源被永久删除，且不会再得到的。",
   422: "当创建一个对象时，发生一个验证错误。",
   500: "服务器发生错误，请检查服务器。",
@@ -26,10 +28,10 @@ const codeMessage = {
   504: "网关超时。",
 };
 /**
- * 异常处理程序
- */
+  * 异常处理程序
+  */
 
-const errorHandler = error => {
+const errorHandler = (error) => {
   const { response } = error;
 
   if (response && response.status) {
@@ -49,8 +51,8 @@ const errorHandler = error => {
   return response;
 };
 /**
- * 配置request请求时的默认参数
- */
+  * 配置request请求时的默认参数
+  */
 
 const request = extend({
   errorHandler,
@@ -58,12 +60,19 @@ const request = extend({
   // credentials: "include", // 默认请求是否带上cookie
 });
 
-request.interceptors.request.use((url,options) => {
+request.interceptors.request.use((url, options) => {
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem("xplat-token")}`,
+    Operator: "admin",
+  };
   return {
-    url:`${baseUrl}${url}`,
-    options:{...options,interceptors:true}
-  }
-})
-
+    url: isUrl(url) ? url : `${baseUrl}${url}`, // 是url 则默认使用之，不是则表明为后端请求...
+    options: {
+      ...options,
+      interceptors: true,
+      headers,
+    },
+  };
+});
 
 export default request;

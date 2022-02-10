@@ -1,8 +1,13 @@
-import { useState } from "react";
 import { Button } from "antd";
 // import { useInterval, useBoolean } from "react-use";
-// import { usePersistFn, useCounter } from "ahooks"
-import { usePersistFn, useInterval, useBoolean, useCounter } from "ahooks"
+// import { useMemoizedFn, useCounter } from "ahooks"
+import {
+  useMemoizedFn,
+  useInterval,
+  useBoolean,
+  useCounter,
+  useSafeState,
+} from "ahooks";
 
 /* 是否开始倒计时
  start?: boolean;
@@ -19,19 +24,24 @@ import { usePersistFn, useInterval, useBoolean, useCounter } from "ahooks"
  onEnd?: () => void;
  */
 
-const getTemplateText = (runText, second) => runText.replace(/\{([^{]*?)%s(.*?)\}/g, second.toString())
+const getTemplateText = (runText, second) =>
+  runText.replace(/\{([^{]*?)%s(.*?)\}/g, second.toString());
 
-const CountDownButton = ({ start, second, initText, resetText, runText, onEnd, ...rest }) => {
-  const [count, {
-    dec,
-    reset
-  }] = useCounter(second, { min: 0, max: second });
+const CountDownButton = function ({
+  start,
+  second,
+  initText,
+  resetText,
+  runText,
+  onEnd,
+  ...rest
+}) {
+  const [count, { dec, reset }] = useCounter(second, { min: 0, max: second });
 
-
-  const [delay] = useState(1000); // 1000
+  const [delay] = useSafeState(1000); // 1000
   const [done, doneOp] = useBoolean(false);
 
-  const timeout = usePersistFn(() => {
+  const timeout = useMemoizedFn(() => {
     // 设置为运行结束后状态
     // 发出倒计时结束事件
     onEnd && onEnd();
@@ -46,9 +56,8 @@ const CountDownButton = ({ start, second, initText, resetText, runText, onEnd, .
         doneOp.toggle(true);
       }
     },
-    start ? delay : null
+    start ? delay : null,
   );
-
 
   const buttonText = () => {
     // console.log(done, start, count, second)

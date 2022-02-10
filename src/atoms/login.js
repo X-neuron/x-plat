@@ -1,14 +1,13 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 export const loginStateAtom = atom({
-  key:"loginStateAtom",
-  default:{
+  key: 'loginStateAtom',
+  default: {
     role: null,
     id: null,
-    account: "test",
-    isLogin: false,
-    // isLogin: true,
-    token: null,
-    ssKey: null
-  }
+    name: localStorage.getItem('accountName'),
+    account: localStorage.getItem('account'),
+    accessToken: localStorage.getItem('xplat-token'),
+    ssKey: null,
+  },
 });

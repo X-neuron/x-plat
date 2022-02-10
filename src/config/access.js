@@ -14,7 +14,8 @@ const defaultAccess = {
   test3Open: false,
   test4Open: true,
   logionPermit: false,
+  dashboardEnable: true,
   // 'example': role === 'admin',
   // 'example2': some => some.prop === 'test'
-}
+};
 export default defaultAccess;
