@@ -1,68 +1,68 @@
-import ProTable from "@ant-design/pro-table";
-import { Button, Space } from "antd";
-import { getSurveyPrjFinances } from "./service";
+import ProTable from '@ant-design/pro-table';
+import { Button, Space } from 'antd';
+import { getSurveyPrjFinances } from './service';
 // import CreateRoleModal from './components/createRoleModal';
 
 // import { EditableProTable } from '@ant-design/pro-table';
 
-const SurveyPrjFinanceManager = function() {
+const SurveyPrjFinanceManager = function () {
   const columns = [
     {
-      title: "编号",
+      title: '编号',
       //   copyable: true,
-      dataIndex: "bianhao",
-      align: "center",
-      key: "bianhao",
+      dataIndex: 'bianhao',
+      align: 'center',
+      key: 'bianhao',
     },
     {
-      title: "凭证号",
-      dataIndex: "pingzhenghao",
-      align: "center",
-      key: "pingzhenghao",
+      title: '凭证号',
+      dataIndex: 'pingzhenghao',
+      align: 'center',
+      key: 'pingzhenghao',
     },
     {
-      title: "记账日期",
+      title: '记账日期',
       width: 120,
-      dataIndex: "jizhangriqi",
-      key: "jizhangriqi",
-      valueType: "date",
+      dataIndex: 'jizhangriqi',
+      key: 'jizhangriqi',
+      valueType: 'date',
     },
     {
-      title: "科目",
-      dataIndex: "kemu",
-      align: "center",
-      key: "kemu",
+      title: '科目',
+      dataIndex: 'kemu',
+      align: 'center',
+      key: 'kemu',
     },
     {
-      title: "摘要",
+      title: '摘要',
       width: 400,
-      dataIndex: "zhaiyao",
-      align: "center",
-      key: "zhaiyao",
+      dataIndex: 'zhaiyao',
+      align: 'center',
+      key: 'zhaiyao',
     },
     {
-      title: "借方",
-      dataIndex: "jiefang",
-      align: "center",
-      key: "jiefang",
+      title: '借方',
+      dataIndex: 'jiefang',
+      align: 'center',
+      key: 'jiefang',
     },
     {
-      title: "贷方",
-      dataIndex: "daifang",
-      align: "center",
-      key: "daifang",
+      title: '贷方',
+      dataIndex: 'daifang',
+      align: 'center',
+      key: 'daifang',
     },
     {
-      title: "余额",
-      dataIndex: "yue",
-      align: "center",
-      key: "yue",
+      title: '余额',
+      dataIndex: 'yue',
+      align: 'center',
+      key: 'yue',
     },
     {
-      title: "备注",
-      dataIndex: "beizhu",
-      align: "center",
-      key: "beizhu",
+      title: '备注',
+      dataIndex: 'beizhu',
+      align: 'center',
+      key: 'beizhu',
     },
     // {
     //   title: '操作',
@@ -138,6 +138,6 @@ const SurveyPrjFinanceManager = function() {
       rowKey="id"
     />
   );
-}
+};
 
 export default SurveyPrjFinanceManager;

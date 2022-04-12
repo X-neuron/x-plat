@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button } from 'antd';
 // import { useInterval, useBoolean } from "react-use";
 // import { useMemoizedFn, useCounter } from "ahooks"
 import {
@@ -7,7 +7,7 @@ import {
   useBoolean,
   useCounter,
   useSafeState,
-} from "ahooks";
+} from 'ahooks';
 
 /* 是否开始倒计时
  start?: boolean;

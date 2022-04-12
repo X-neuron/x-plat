@@ -1,5 +1,5 @@
-import { Suspense } from "react";
-import { Button, message } from "antd";
+// import { Suspense } from 'react';
+import { Button, message } from 'antd';
 import ProForm, {
   ProFormText,
   ProFormDateRangePicker,
@@ -11,36 +11,38 @@ import ProForm, {
   ProFormGroup,
   ProFormFieldSet,
   DrawerForm,
-} from "@ant-design/pro-form";
-import { useRecoilValue } from "recoil";
-import PageLoading from "@/components/PageLoading";
-import { getProjectCost, updateProjectCost } from "../service";
-import {
-  projectMajorFlowAtom,
-  projectMajorStepAtom,
-  projectSubStepAtom,
-} from "../atoms";
-import { getCategoryDescendantByName } from "@/service";
-import paramConfig from "@/config/params";
+} from '@ant-design/pro-form';
+import { useRecoilValue } from 'recoil';
+import { projectCoperAtom } from '@/atoms/share';
 
-const ProjectCostDrawerForm = function(props) {
+import { updateProjectCost } from '../service';
+
+
+
+
+const ProjectCostDrawerForm = function (props) {
   // const { record } = props;
   // record中， 带了 cost 信息
   const { record, title } = props;
+  console.log(record)
+
+  const projectCoper = useRecoilValue(projectCoperAtom);
+  // const domainClass = useRecoilValue(domainClassAtom);
+
   return (
     <DrawerForm
       // formRef={formRef}
-      title={record ? `${record.name} 项目经费详情` : "项目经费表单"}
+      title={record ? `${record.name} 项目经费详情` : '项目经费表单'}
       trigger={
         <Button type="primary">
           {/* <PlusOutlined /> */}
-          {title || "新建项目经费"}
+          {title || '新建项目经费'}
         </Button>
       }
-      drawerProps={{
-        forceRender: true,
-        destroyOnClose: true,
-      }}
+      // drawerProps={{
+      //   // forceRender: true,
+      //   // destroyOnClose: true,
+      // }}
       initialValues={{
         expectedBuget: record?.cost?.expectedBuget,
         approvedBuget: record?.cost?.approvedBuget,
@@ -52,7 +54,7 @@ const ProjectCostDrawerForm = function(props) {
       }}
       onFinish={async (values) => {
         const res = await updateProjectCost(values, record?.id);
-        message.success("提交成功");
+        message.success('提交成功');
         return true;
       }}
     >
@@ -131,7 +133,7 @@ const ProjectCostDrawerForm = function(props) {
         //   },
         // ]}
         creatorButtonProps={{
-          position: "bottom",
+          position: 'bottom',
         }}
         // creatorRecord={{
         //   name: 'everyContractDetail',
@@ -143,27 +145,18 @@ const ProjectCostDrawerForm = function(props) {
             name="projectCoperation"
             label="项目合作方"
             width={250}
-            request={async () => {
-              const res = await getCategoryDescendantByName(
-                paramConfig.projectCoperation,
-              );
-              return res.data.map((item) => ({
-                label: item.name,
-                value: item.name,
-                key: item.name,
-              }));
-            }}
+            options={projectCoper}
             placeholder="请选择项目合作方"
           />
           <ProFormText
             required
-            rules={[{ required: true, message: "合同编号不应为空" }]}
+            rules={[{ required: true, message: '合同编号不应为空' }]}
             name="contractNumber"
             label="合同编号"
             placeholder="输入合同编号"
           />
           <ProFormDateRangePicker
-            rules={[{ required: true, message: "计划时间不能为空" }]}
+            rules={[{ required: true, message: '计划时间不能为空' }]}
             name="contractSpendDate"
             label="合同启止时间"
           />
@@ -183,11 +176,11 @@ const ProjectCostDrawerForm = function(props) {
             options={[
               {
                 value: 0,
-                label: "超期",
+                label: '超期',
               },
               {
                 value: 1,
-                label: "未超期",
+                label: '未超期',
               },
             ]}
             placeholder="项目是否超期"
@@ -198,11 +191,11 @@ const ProjectCostDrawerForm = function(props) {
             options={[
               {
                 value: 0,
-                label: "系统未应用",
+                label: '系统未应用',
               },
               {
                 value: 1,
-                label: "系统已应用",
+                label: '系统已应用',
               },
             ]}
             placeholder="系统是否应用"
@@ -233,7 +226,7 @@ const ProjectCostDrawerForm = function(props) {
         //   },
         // ]}
         creatorButtonProps={{
-          position: "bottom",
+          position: 'bottom',
         }}
         // creatorRecord={{
         //   name: 'annualBugetDetail',
@@ -318,6 +311,6 @@ const ProjectCostDrawerForm = function(props) {
       </ProFormList>
     </DrawerForm>
   );
-}
+};
 
 export default ProjectCostDrawerForm;

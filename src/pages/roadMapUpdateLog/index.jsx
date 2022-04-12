@@ -1,95 +1,30 @@
-import { Chrono } from "react-chrono";
+import { Suspense } from 'react';
+import ProCard from '@ant-design/pro-card';
+import PageLoading from '@/components/PageLoading';
+import RoadMap from './components/RoadMap';
+import Post from './components/Post';
 
-const RoadMapUpdateLog = function() {
-  const items = [
-    {
-      title: "2021年5月16日",
-      cardTitle: "0.0.1",
-      cardSubtitle: "实现平台初步功能..",
-      cardDetailedText: `这是平台这是平台这是平台这是平
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-
-      `,
-    },
-    {
-      title: "2021年5月17日",
-      cardTitle: "0.0.2",
-      cardSubtitle: "实现平台初步功能..",
-      cardDetailedText: `这是平台这是平台这是平台这是平
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-
-      `,
-    },
-    {
-      title: "2021年5月18日",
-      cardTitle: "0.0.3",
-      cardSubtitle: "实现平台初步功能..",
-      cardDetailedText: `这是平台这是平台这是平台这是平
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-
-      `,
-    },
-    {
-      title: "2021年5月19日",
-      cardTitle: "0.0.3",
-      cardSubtitle: "实现平台初步功能..",
-      cardDetailedText: `这是平台这是平台这是平台这是平
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-
-      `,
-    },
-    {
-      title: "2021年5月20日",
-      cardTitle: "0.0.3",
-      cardSubtitle: "实现平台初步功能..",
-      cardDetailedText: `这是平台这是平台这是平台这是平
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-
-      `,
-    },
-    {
-      title: "2021年5月21日",
-      cardTitle: "0.0.3",
-      cardSubtitle: "实现平台初步功能..",
-      cardDetailedText: `这是平台这是平台这是平台这是平
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-          这是个平台
-
-      `,
-    },
-  ];
-
+const RoadMapUpdateLog = function () {
   return (
-    <div
-      style={{
-        height: "100vh",
-      }}
-    >
-      <Chrono items={items} mode="VERTICAL_ALTERNATING" />
-    </div>
+    // split="vertical"  split="horizontal"
+    <ProCard split="vertical">
+      <ProCard colSpan="60%">
+        <Suspense fallback={<PageLoading />}>
+            <RoadMap />
+        </Suspense>
+      </ProCard>
+      {/* <ProCard split="vertical" > */}
+      {/* <ProCard colSpan="35%">
+          <Suspense fallback={<PageLoading />}>
+            <TaskCostDrawerForm />
+          </Suspense>
+        </ProCard> */}
+      <ProCard colSpan="40%">
+        <Post />
+      </ProCard>
+      {/* </ProCard> */}
+    </ProCard>
   );
-}
+};
+
 export default RoadMapUpdateLog;

@@ -1,18 +1,18 @@
-import { useRef } from "react";
-import { Button, message, TreeSelect, Popconfirm } from "antd";
+import { useRef } from 'react';
+import { Button, message, TreeSelect, Popconfirm } from 'antd';
 
 // import ProCard from '@ant-design/pro-card';
-import { Suspense } from "react";
+import { Suspense } from 'react';
 import ProForm, {
   ProFormTextArea,
   ProFormCheckbox,
   ProFormDependency,
   ProFormSelect,
-} from "@ant-design/pro-form";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { useCreation, useSafeState, useUpdate, useUpdateEffect } from "ahooks";
-import _ from "lodash";
-import PageLoading from "@/components/PageLoading";
+} from '@ant-design/pro-form';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { useCreation, useSafeState, useUpdate, useUpdateEffect } from 'ahooks';
+import _ from 'lodash';
+import PageLoading from '@/components/PageLoading';
 
 // import paramConfig from '@/config/params';
 import {
@@ -24,10 +24,10 @@ import {
   browseMajorStepAtom,
   browseSubStepAtom,
   browserStepTreeDataAtom,
-} from "../atoms";
-import { updateProjectStepDetail } from "../service";
-import UploadFilesForm from "./UploadFilesForm";
-import BrowseFilesTable from "./BrowseFilesTable";
+} from '../atoms';
+import { updateProjectStepDetail } from '../service';
+import UploadFilesForm from './UploadFilesForm';
+import BrowseFilesTable from './BrowseFilesTable';
 // details 为了方便计算和提取分析。对mainStep 和 subStep 进行编码。 code  = mainStep * 100 + subStep
 // 提取 主 和 当前步骤  则 为 {mainStep,subStep} = mode(code,100); 余数和莫
 // curMainStep curSubStep 以js数组的0开始计算的。所以实际提取的 -1 ，生成编号的时候+ 1
@@ -41,17 +41,24 @@ import BrowseFilesTable from "./BrowseFilesTable";
 //  301
 //  302
 
-const getCodeFromStep = (mainStep, subStep, step = 100) => (mainStep + 1) * step + subStep + 1;
+const getCodeFromStep = (mainStep, subStep, step = 100) =>
+  (mainStep + 1) * step + subStep + 1;
 
-const getStepFromCode = (code, step = 100) => [Math.floor(code / step) - 1, (code % step) - 1];
+const getStepFromCode = (code, step = 100) => [
+  Math.floor(code / step) - 1,
+  (code % step) - 1,
+];
 
-const getStepFromCodeWithoutMinus = (code, step = 100) => [Math.floor(code / step), code % step];
+const getStepFromCodeWithoutMinus = (code, step = 100) => [
+  Math.floor(code / step),
+  code % step,
+];
 
 const gencode = (stepType, index, startNum) =>
-  stepType === "main" ? (index + 1) * 100 : startNum + index + 1;
+  stepType === 'main' ? (index + 1) * 100 : startNum + index + 1;
 
-const StepDetailForm = function(props) {
-  console.log("stepDetailForm render");
+const StepDetailForm = function (props) {
+  console.log('stepDetailForm render');
   const { record } = props;
   const stepDetailFromRef = useRef();
 
@@ -76,14 +83,14 @@ const StepDetailForm = function(props) {
   const browserStepTreeData = useRecoilValue(
     browserStepTreeDataAtom,
   ).filterTree;
-  const {stepList} = useRecoilValue(browserStepTreeDataAtom);
+  const { stepList } = useRecoilValue(browserStepTreeDataAtom);
 
   const browseBtnEnable = useCreation(() => {
     const smallest = stepList[0];
     const biggest = stepList[stepList.length - 1];
     const curNumber = getCodeFromStep(curMainStep, curSubStep);
     console.log(
-      "browseBtnEnable :curMainStep curSubStep",
+      'browseBtnEnable :curMainStep curSubStep',
       curMainStep,
       curSubStep,
     );
@@ -131,13 +138,13 @@ const StepDetailForm = function(props) {
     const res = await updateProjectStepDetail(
       {
         ...stepDetailFromRef.current.getFieldsValue(),
-        act: "finish",
+        act: 'finish',
       },
       record?.id,
       curMainStep,
       curSubStep,
     );
-    message.success("提交成功");
+    message.success('提交成功');
     // 同步更新下
     setSelectProject(record);
     return true;
@@ -176,9 +183,12 @@ const StepDetailForm = function(props) {
 
   const browserStep = (act) => {
     const curStepCode = getCodeFromStep(curMainStep, curSubStep);
-    const curStepPosition = _.findIndex(stepList, (value, index) => value === curStepCode);
+    const curStepPosition = _.findIndex(
+      stepList,
+      (value, index) => value === curStepCode,
+    );
     const browseNextCode =
-      act === "last"
+      act === 'last'
         ? stepList[curStepPosition - 1]
         : stepList[curStepPosition + 1];
     const [toMainStep, toSubStep] = getStepFromCode(browseNextCode);
@@ -195,23 +205,23 @@ const StepDetailForm = function(props) {
         const res = await updateProjectStepDetail(
           {
             ...values,
-            act: "update",
+            act: 'update',
           },
           record?.id,
           curMainStep,
           curSubStep,
         );
-        message.success("提交成功");
+        message.success('提交成功');
         return true;
       }}
       initialValues={{
         ...curProjectStepDetail,
       }}
       submitter={{
-        key: "submitter",
+        key: 'submitter',
         // 完全自定义整个区域
         render: (props, doms) => {
-          const {form} = props;
+          const { form } = props;
           return [
             <Button
               type="primary"
@@ -224,7 +234,7 @@ const StepDetailForm = function(props) {
               <Button
                 type="primary"
                 key="lookLast"
-                onClick={() => browserStep("last")}
+                onClick={() => browserStep('last')}
               >
                 查看上一步
               </Button>
@@ -235,7 +245,7 @@ const StepDetailForm = function(props) {
               <Button
                 type="primary"
                 key="lookNext"
-                onClick={() => browserStep("next")}
+                onClick={() => browserStep('next')}
               >
                 查看下一步
               </Button>
@@ -285,15 +295,15 @@ const StepDetailForm = function(props) {
         options={[
           {
             value: 1,
-            label: "正常进行",
+            label: '正常进行',
           },
           {
             value: 2,
-            label: "暂停",
+            label: '暂停',
           },
           {
             value: 3,
-            label: "已完成",
+            label: '已完成',
           },
         ]}
         placeholder="请选择步骤状态"
@@ -334,10 +344,10 @@ const StepDetailForm = function(props) {
             ? curProjectStepDetail?.hasElectronicFiles
             : hasDigiFiles.current.value
         ) ? (
-            <UploadFilesForm record={record} />
-          ) : (
-            <></>
-          )}
+          <UploadFilesForm record={record} />
+        ) : (
+          <></>
+        )}
       </Suspense>
       <ProFormTextArea
         name="remark"
@@ -347,6 +357,6 @@ const StepDetailForm = function(props) {
       />
     </ProForm>
   );
-}
+};
 
 export default StepDetailForm;

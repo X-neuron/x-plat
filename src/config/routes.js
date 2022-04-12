@@ -32,18 +32,25 @@ const routes = [
             // 之所以用menuTabs 为了将功能单独做成动态的route
             menuTabs: [
               {
-                path: "/",
-                index: true, // index route写法
-                name: "欢迎菜单", // 翻译失败后 则采用name配置值,如无需全球化直接使用中文即可。
-                icon: "PieChartOutlined", // @/config/icons里配置的图标,小写也可以
-                access: "dashboardEnable", // @/config/access里可配置静态策略。权限入口在@/config/pages里。
-                component: "dashboard", // 非动态的有page属性的路由，会默认显示在sideMmenu里。
-              },
-              {
-                path: "/roadMapUpdateLog",
-                name: "开发路线图及更新日志",
-                icon: "IssuesCloseOutlined",
-                component: "roadMapUpdateLog",
+                name:"欢迎面板",
+                path:"/",
+                icon: "FormOutlined",
+                children:[
+                  {
+                    path: "/",
+                    // index: true, // index route写法
+                    name: "欢迎菜单", // 翻译失败后 则采用name配置值,如无需全球化直接使用中文即可。
+                    icon: "PieChartOutlined", // @/config/icons里配置的图标,小写也可以
+                    // access: "dashboardEnable", // @/config/access里可配置静态策略。权限入口在@/config/pages里。
+                    component: "dashboard", // 非动态的有page属性的路由，会默认显示在sideMmenu里。
+                  },
+                  {
+                    path: "roadMapUpdateLog",
+                    name: "开发路线图及更新日志",
+                    icon: "IssuesCloseOutlined",
+                    component: "roadMapUpdateLog",
+                  },
+                ]
               },
               {
                 name: "用户功能",
@@ -85,7 +92,18 @@ const routes = [
                         name: "项目经费明细",
                         path: "surveyPrjFinanceManager",
                         component: "surveyPrjFinanceManager",
-                        // access: "surveyingProjectManagerEnable",
+                      },
+                    ],
+                  },
+                  {
+                    name: "业务工作",
+                    path: "task",
+                    icon: "ProjectOutlined",
+                    children: [
+                      {
+                        name: "任务管理",
+                        path: "taskManager",
+                        component: "taskManager",
                       },
                     ],
                   },
@@ -157,7 +175,7 @@ const routes = [
                   {
                     name: "vue2测试",
                     path: "vue2/*",
-                    access: "microOpen",
+                    // access: "microOpen",
                     // component: 'http://localhost:8004', // 微前端配置
                     component: "http://192.9.209.45:8004", // 微前端配置
                   },

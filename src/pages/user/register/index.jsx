@@ -4,29 +4,29 @@ import {
   MailTwoTone,
   MobileTwoTone,
   UserOutlined,
-} from "@ant-design/icons";
-import { useRef } from "react";
+} from '@ant-design/icons';
+import { useRef } from 'react';
 
-import { Popover, Progress, Tabs, Space, Form, message } from "antd";
+import { Popover, Progress, Tabs, Space, Form, message } from 'antd';
 import ProForm, {
   ProFormCaptcha,
   ProFormCheckbox,
   ProFormText,
   ProFormSelect,
   ProFormGroup,
-} from "@ant-design/pro-form";
-import Field from "@ant-design/pro-field";
+} from '@ant-design/pro-form';
+import Field from '@ant-design/pro-field';
 
-import { useMemoizedFn, useSafeState } from "ahooks";
+import { useMemoizedFn, useSafeState } from 'ahooks';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import { i18n } from "@lingui/core";
-import { t, Trans } from "@lingui/macro";
+import { i18n } from '@lingui/core';
+import { t, Trans } from '@lingui/macro';
 
-import { userRegister } from "./service";
+import { userRegister,userFastRegister } from './service';
 
-import styles from "./index.less";
+import styles from './index.less';
 
 const passwordStatusMap = {
   ok: <div className={styles.success}>强度：强</div>,
@@ -35,35 +35,45 @@ const passwordStatusMap = {
 };
 
 const passwordProgressMap = {
-  ok: "success",
-  pass: "normal",
-  poor: "exception",
+  ok: 'success',
+  pass: 'normal',
+  poor: 'exception',
 };
 
-const Register = function(props) {
+const Register = function (props) {
   const { submitting } = props;
   const formRef = useRef();
   const [allowClear] = useSafeState(true);
   const [captCha, setCaptCha] = useSafeState(false);
-  const [type, setType] = useSafeState("userRegister");
+  const [type, setType] = useSafeState('userFastRegister');
   // const [popVisible, setPopVisible] = useSafeState(false);
 
   const [state, setState] = useSafeState({
     confirmDirty: false,
     visible: false,
-    help: "",
-    prefix: "86",
+    help: '',
+    prefix: '86',
   });
 
   const handleSubmit = async (values) => {
-    const res = await userRegister(values);
-    message.success("提交成功");
-    console.log(res);
+
+    if(values.account){
+      message.error("当前注册功能已关闭,请使用快速用户注册功能");
+      // const res = await userRegister(values);
+      // message.success('提交成功');
+    }else{
+      const res = await userFastRegister(values);
+      message.success('提交成功');
+    }
+
+    // const res = await userRegister(values);
+    // message.success('提交成功');
+    
   };
 
   const checkPwdConfirm = useMemoizedFn((rule, value, callback) => {
-    if (value && value !== formRef.current.getFieldValue("password")) {
-      callback("两次输入的密码不匹配!");
+    if (value && value !== formRef.current.getFieldValue('password')) {
+      callback('两次输入的密码不匹配!');
     } else {
       callback();
     }
@@ -73,14 +83,14 @@ const Register = function(props) {
     if (!value) {
       setState((prevState) => ({
         ...prevState,
-        help: "请输入密码！",
+        help: '请输入密码！',
         visible: !!value,
       }));
-      callback("error");
+      callback('error');
     } else {
       setState((prevState) => ({
         ...prevState,
-        help: " ",
+        help: ' ',
       }));
       if (!state.visible) {
         setState((prevState) => ({
@@ -89,10 +99,10 @@ const Register = function(props) {
         }));
       }
       if (value.length < 6) {
-        callback("error");
+        callback('error');
       } else {
         if (value && state.confirmDirty) {
-          formRef.current.validateFields(["passwordConfirm"], { force: true });
+          formRef.current.validateFields(['passwordConfirm'], { force: true });
         }
         callback();
       }
@@ -100,21 +110,21 @@ const Register = function(props) {
   };
 
   const getPasswordStatus = useMemoizedFn(() => {
-    const value = formRef.current?.getFieldValue("password");
+    const value = formRef.current?.getFieldValue('password');
     if (value && value.length > 9) {
-      return "ok";
+      return 'ok';
     }
     if (value && value.length > 3) {
-      return "pass";
+      return 'pass';
     }
-    return "poor";
+    return 'poor';
   });
 
   const renderPasswordProgress = useMemoizedFn(() => {
     if (!state.visible) {
       return <></>;
     }
-    const value = formRef.current.getFieldValue("password");
+    const value = formRef.current.getFieldValue('password');
     const passwordStatus = getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
@@ -133,13 +143,13 @@ const Register = function(props) {
     <div className={styles.main}>
       <ProForm
         submitter={{
-          key: "submitter",
+          key: 'submitter',
           render: (_, dom) => dom.pop(),
           submitButtonProps: {
             loading: submitting,
-            size: "large",
+            size: 'large',
             style: {
-              width: "100%",
+              width: '100%',
             },
           },
         }}
@@ -151,20 +161,20 @@ const Register = function(props) {
       >
         <Tabs activeKey={type} onChange={setType} centered>
           <Tabs.TabPane key="userRegister" tab={i18n._(t`用户注册`)} />
-          <Tabs.TabPane key="appRegister" tab={i18n._(t`应用注册`)} />
+          <Tabs.TabPane key="userFastRegister" tab={i18n._(t`用户快速注册`)} />
         </Tabs>
 
-        {status === "error" && !submitting && (
+        {status === 'error' && !submitting && (
           <LoginMessage
             content={i18n._(t`账户或密码错误（admin/ant.design)`)}
           />
         )}
-        {type === "userRegister" && (
+        {type === 'userRegister' && (
           <>
             <ProFormText
               name="account"
               fieldProps={{
-                size: "large",
+                size: 'large',
                 prefix: <UserOutlined className={styles.prefixIcon} />,
                 allowClear,
               }}
@@ -176,14 +186,14 @@ const Register = function(props) {
                 },
                 {
                   pattern: /^[a-zA-Z0-9_-]{3,16}$/,
-                  message: "账户名由3-16个英文字母、数字和下划线_构成",
+                  message: '账户名由3-16个英文字母、数字和下划线_构成',
                 },
               ]}
             />
             <ProFormText
               name="nickName"
               fieldProps={{
-                size: "large",
+                size: 'large',
                 prefix: <UserOutlined className={styles.prefixIcon} />,
                 allowClear,
               }}
@@ -198,7 +208,7 @@ const Register = function(props) {
             <ProFormText
               name="email"
               fieldProps={{
-                size: "large",
+                size: 'large',
                 prefix: <UserOutlined className={styles.prefixIcon} />,
                 allowClear,
               }}
@@ -209,33 +219,33 @@ const Register = function(props) {
                   message: i18n._(t`请输入邮箱地址`),
                 },
                 {
-                  type: "email",
+                  type: 'email',
                   message: i18n._(t`输入正确的邮箱地址`),
                 },
               ]}
             />
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
               <ProFormSelect
                 fieldProps={{
-                  size: "large",
+                  size: 'large',
                 }}
                 name="PhonePrefix"
                 // defaultValue="+86"
                 initialValues="+86"
                 valueEnum={{
-                  prefix1: "+86",
-                  prefix2: "+87",
+                  prefix1: '+86',
+                  prefix2: '+87',
                 }}
                 placeholder="86"
               />
               <ProFormText
                 fieldProps={{
-                  size: "large",
+                  size: 'large',
                   prefix: <MobileTwoTone className={styles.prefixIcon} />,
                   allowClear,
                 }}
@@ -255,7 +265,7 @@ const Register = function(props) {
             </div>
             <Popover
               content={
-                <div style={{ padding: "4px 0" }}>
+                <div style={{ padding: '4px 0' }}>
                   {passwordStatusMap[getPasswordStatus()]}
                   {renderPasswordProgress()}
                   <div style={{ marginTop: 10 }}>
@@ -272,7 +282,7 @@ const Register = function(props) {
               <ProFormText.Password
                 name="password"
                 fieldProps={{
-                  size: "large",
+                  size: 'large',
                   prefix: <LockTwoTone className={styles.prefixIcon} />,
                   allowClear,
                 }}
@@ -291,15 +301,15 @@ const Register = function(props) {
             <ProFormText.Password
               name="passwordConfirm"
               fieldProps={{
-                size: "large",
+                size: 'large',
                 prefix: <LockTwoTone className={styles.prefixIcon} />,
                 allowClear,
               }}
-              placeholder={i18n._(t`密码：任意`)}
+              placeholder={i18n._(t`密码：请确认密码`)}
               rules={[
                 {
                   required: true,
-                  message: "请确认密码！",
+                  message: '请确认密码！',
                 },
                 {
                   validator: checkPwdConfirm,
@@ -309,59 +319,78 @@ const Register = function(props) {
           </>
         )}
 
-        {status === "error" && !submitting && (
+        {status === 'error' && !submitting && (
           <LoginMessage content={i18n._(t`验证码错误`)} />
         )}
-        {type === "appRegister" && (
+        {type === 'userFastRegister' && (
           <>
             <ProFormText
+              name="nickName"
               fieldProps={{
-                size: "large",
-                prefix: <MobileTwoTone className={styles.prefixIcon} />,
+                size: 'large',
+                prefix: <UserOutlined className={styles.prefixIcon} />,
                 allowClear,
               }}
-              name="mobile"
-              placeholder={i18n._(t`手机号`)}
+              placeholder={i18n._(t`请填写用户真实姓名`)}
               rules={[
                 {
                   required: true,
-                  message: i18n._(t`请输入手机号`),
-                },
-                {
-                  pattern: /^1\d{10}$/,
-                  message: i18n._(t`手机号格式错误`),
+                  message: i18n._(t`请填写用户真实姓名`),
                 },
               ]}
             />
-            <ProFormCaptcha
+            <Popover
+              content={
+                <div style={{ padding: '4px 0' }}>
+                  {passwordStatusMap[getPasswordStatus()]}
+                  {renderPasswordProgress()}
+                  <div style={{ marginTop: 10 }}>
+                    请至少输入 6 个字符。请不要使用容易被猜到的密码。
+                  </div>
+                </div>
+              }
+              trigger="focus"
+              overlayStyle={{ width: 240 }}
+              placement="right"
+              // visible={popVisible}
+              visible={state.visible}
+            >
+              <ProFormText.Password
+                name="password"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockTwoTone className={styles.prefixIcon} />,
+                  allowClear,
+                }}
+                placeholder={i18n._(t`密码需6位以上，区分大小写`)}
+                rules={[
+                  {
+                    validator: checkPassword,
+                  },
+                  {
+                    min: 3,
+                    message: i18n._(t`密码需6位以上，区分大小写`),
+                  },
+                ]}
+              />
+            </Popover>
+            <ProFormText.Password
+              name="passwordConfirm"
               fieldProps={{
-                size: "large",
-                prefix: <MailTwoTone className={styles.prefixIcon} />,
+                size: 'large',
+                prefix: <LockTwoTone className={styles.prefixIcon} />,
                 allowClear,
               }}
-              captchaProps={{
-                size: "large",
-              }}
-              placeholder={i18n._(t`请输入验证码`)}
-              captchaTextRender={(timing, count) => {
-                if (timing) {
-                  return `${count} ${i18n._(t`获取验证码`)}`;
-                }
-                return i18n._(t`获取验证码`);
-              }}
-              name="captcha"
+              placeholder={i18n._(t`密码：请确认密码`)}
               rules={[
                 {
                   required: true,
-                  message: <Trans>请输入验证码</Trans>,
+                  message: '请确认密码！',
+                },
+                {
+                  validator: checkPwdConfirm,
                 },
               ]}
-              countDown={10}
-              onGetCaptcha={async (mobile) => {
-                // const result = await getFakeCaptcha(mobile);
-
-                message.success("获取验证码成功！验证码为：1234");
-              }}
             />
           </>
         )}
@@ -373,6 +402,6 @@ const Register = function(props) {
       </Space>
     </div>
   );
-}
+};
 
 export default Register;

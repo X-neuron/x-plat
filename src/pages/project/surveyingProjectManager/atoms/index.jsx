@@ -1,42 +1,45 @@
 import { atom, selector } from "recoil";
-import { getProjectDetailById, getProjectStepDetail } from "../service";
 import { getCategoryDescendantByName } from "@/service";
 import paramConfig from "@/config/params";
+import { getProjectDetailById, getProjectStepDetail } from "../service";
 
 const gencode = (stepType, index, startNum) =>
   stepType === "main" ? (index + 1) * 100 : startNum + index + 1;
 
-const getCodeFromStep = (mainStep, subStep, step = 100) => (mainStep + 1) * step + subStep + 1;
+const getCodeFromStep = (mainStep, subStep, step = 100) =>
+  (mainStep + 1) * step + subStep + 1;
 
 const filterTransToAntdTreeData = (tree, curMainStep, curSubStep) => {
   const stepList = [];
-  const toAntdTrees = (array, stepType, startNum) => array
-    ?.filter((item, index) => (
-      gencode(stepType, index, startNum) <= curMainStep * 100 + curSubStep
-    ))
-    .map((item, index) => {
-      const code = gencode(stepType, index, startNum);
-      if (code % 100 !== 0) stepList.push(gencode(stepType, index, startNum));
-      const returnValue = {
-        id: item.id,
-        // key: item.id,
-        // value: item.id,
-        key: code,
-        value: code,
-        title: item.name,
-        isLeaf: item.children.length === 0,
-        // disableCheckbox:item.children.length === 0 ? true:false,
-        selectable: item.children.length === 0, // 只能选择叶子节点
-      };
-      if (item.children.length !== 0) {
-        returnValue.children = toAntdTrees(
-          item.children,
-          "children",
-          (index + 1) * 100,
-        );
-      }
-      return returnValue;
-    });
+  const toAntdTrees = (array, stepType, startNum) =>
+    array
+      ?.filter(
+        (item, index) =>
+          gencode(stepType, index, startNum) <= curMainStep * 100 + curSubStep,
+      )
+      .map((item, index) => {
+        const code = gencode(stepType, index, startNum);
+        if (code % 100 !== 0) stepList.push(gencode(stepType, index, startNum));
+        const returnValue = {
+          id: item.id,
+          // key: item.id,
+          // value: item.id,
+          key: code,
+          value: code,
+          title: item.name,
+          isLeaf: item.children.length === 0,
+          // disableCheckbox:item.children.length === 0 ? true:false,
+          selectable: item.children.length === 0, // 只能选择叶子节点
+        };
+        if (item.children.length !== 0) {
+          returnValue.children = toAntdTrees(
+            item.children,
+            "children",
+            (index + 1) * 100,
+          );
+        }
+        return returnValue;
+      });
   const filterTree = toAntdTrees(tree, "main");
   // console.log('filtertree,steplist is:',filterTree,stepList);
   return { filterTree, stepList };
@@ -85,8 +88,7 @@ export const projectMajorFlowAtom = selector({
     // );
     // console.log('projectMajorFlowAtom', res);
     // return res?.data;
-    get(projectDetailAtom)?.stepTemplate?.details
-  ,
+    get(projectDetailAtom)?.stepTemplate?.details,
 });
 
 export const projectSubFlowAtom = selector({
@@ -153,7 +155,8 @@ export const fileFeatureAtom = selector({
 
 export const codeIndexAtom = selector({
   key: "codeIndexAtom",
-  get: async ({ get }) => getCodeFromStep(get(projectMajorStepAtom), get(projectSubStepAtom)),
+  get: async ({ get }) =>
+    getCodeFromStep(get(projectMajorStepAtom), get(projectSubStepAtom)),
 });
 
 // const browserStepTreeData = useCreation(() => filterTransToAntdTreeData(curProjectDetail.stepTemplate.details,curProjectDetail.progress.curMainStep,curProjectDetail.progress.curSubStep),[curProjectDetail]);
@@ -170,3 +173,18 @@ export const browserStepTreeDataAtom = selector({
       : null;
   },
 });
+
+// export const projectOrgAtom = selector({
+//   key:"projectOrgAtom",
+//   get: async ({get}) => {
+//     const res = await getCategoryDescendantByName(
+//       paramConfig.projectOrigin,
+//     );
+//     // 自动丢弃 子类
+//     return res.data.map((item) => ({
+//       label: item.name,
+//       value: item.name,
+//       key: item.name,
+//     }));
+//   }
+// })

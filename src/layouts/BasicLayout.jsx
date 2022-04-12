@@ -1,28 +1,28 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { Suspense } from "react";
-import { useSafeState, useCreation } from "ahooks";
+import { Suspense } from 'react';
+import { useSafeState, useCreation } from 'ahooks';
 import {
   useNavigate,
   Outlet,
   matchRoutes,
   useLocation,
-} from "react-router-dom";
-import ProLayout, { SettingDrawer } from "@ant-design/pro-layout";
-import defaultSettings from "@ant-design/pro-layout/es/defaultSettings";
-import { useRecoilValue } from "recoil";
-import _ from "lodash";
-import memoized from "nano-memoize";
-import PageLoading from "@/components/PageLoading";
-import { RightContent } from "@/components/GlobalHeader";
-import TabRoute from "@/components/TabRoute";
+} from 'react-router-dom';
+import ProLayout, { SettingDrawer } from '@ant-design/pro-layout';
+import defaultSettings from '@ant-design/pro-layout/es/defaultSettings';
+import { useRecoilValue } from 'recoil';
+import _ from 'lodash';
+import memoized from 'nano-memoize';
+import PageLoading from '@/components/PageLoading';
+import { RightContent } from '@/components/GlobalHeader';
+import TabRoute from '@/components/TabRoute';
 
-import logo from "@/assets/logo.svg";
-import styles from "./BasicLayout.less";
-import { curLocaleLoadAtom } from "@/atoms/locale";
-import { transDynamicRouteAtom } from "@/atoms/route";
-import { tabsModelAtom } from "@/atoms/tabsModel";
+import logo from '@/assets/logo.svg';
+import { curLocaleLoadAtom } from '@/atoms/locale';
+import { transDynamicRouteAtom } from '@/atoms/route';
+import { tabsModelAtom } from '@/atoms/tabsModel';
+import styles from './BasicLayout.less';
 
 // 从config里 把 匹配的信息 调出来
 // 放这因为activekey 在 prolayout 和 tabroute之间共享。
@@ -32,7 +32,7 @@ const pickRoutes = memoized((routes, pathname) => {
   return {
     routeConfig,
     // matchPath: matches ? matches.map(match => _.replace(match.route.path,'/*','')).join('/') : null // 解决下微端/*路径的问题
-    matchPath: routeConfig ? _.replace(routeConfig.key, "/*", "") : null,
+    matchPath: routeConfig ? _.replace(routeConfig.key, '/*', '') : null,
   };
 });
 
@@ -70,7 +70,7 @@ const BasicLayout = function (props) {
     <div id="prolayout" key="prolayout">
       <ProLayout
         style={{
-          height: "100vh",
+          height: '100vh',
         }}
         menuDataRender={() => feedToProlayoutRoute}
         menuItemRender={(item, dom) => (
@@ -80,7 +80,7 @@ const BasicLayout = function (props) {
               navigate(item.fullPath, { replace: true });
             }}
           >
-            {" "}
+            {' '}
             {dom}
           </div>
         )}
@@ -91,7 +91,7 @@ const BasicLayout = function (props) {
             id="customize_menu_header"
             className={styles.logo}
             onClick={() => {
-              window.open("www.baidu.com");
+              window.open('www.baidu.com');
             }}
           >
             <img src={logo} />
@@ -119,7 +119,8 @@ const BasicLayout = function (props) {
         {/* </PageContainer> */}
       </ProLayout>
       <SettingDrawer
-        getContainer={() => document.getElementById("prolayout")}
+        enableDarkTheme
+        getContainer={() => document.getElementById('prolayout')}
         settings={settings}
         disableUrlParams={true}
         onSettingChange={(changeSetting) => setSetting(changeSetting)}

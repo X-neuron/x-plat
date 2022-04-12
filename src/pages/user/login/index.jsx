@@ -13,33 +13,43 @@ import ProForm, {
   ProFormCheckbox,
   ProFormText,
 } from "@ant-design/pro-form";
-import { Link , useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { i18n } from "@lingui/core";
 import { t, Trans } from "@lingui/macro";
 
-import { useRecoilState } from "recoil";
-import styles from "./index.less";
-import { accountLogin } from "./service";
+
 import { loginStateAtom } from "@/atoms/login";
+import { accessAtom } from "@/atoms/access";
+import { transPermissionToRoute } from '@/utils/utils';
+import { useRecoilState } from "recoil";
+import { accountLogin } from "./service";
+import styles from "./index.less";
+// import routes from "../../../config/routes";
 
-const LoginMessage = function({ content }) {
-  return <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-}
+const LoginMessage = function ({ content }) {
+  return (
+    <Alert
+      style={{
+        marginBottom: 24,
+      }}
+      message={content}
+      type="error"
+      showIcon
+    />
+  );
+};
 
-const Login = function(props) {
+
+const Login = function (props) {
   const { userLogin = {}, submitting } = props;
   const { status } = userLogin;
-  const [type, setType] = useSafeState("account");
+  const [type, setType] = useSafeState("fast");
   const [captCha, setCaptCha] = useSafeState(false);
   const [login, setLogin] = useRecoilState(loginStateAtom);
+
+  const [access,setAccess]  = useRecoilState(accessAtom);
+
   const navigate = useNavigate();
   const handleSubmit = async (values) => {
     // const res = accountLogin(values);
@@ -49,17 +59,38 @@ const Login = function(props) {
     //   isLogin:true
     // });
     // 应该提取redirect ，此处省略
+
     const res = await accountLogin(values);
+
+    // const res = await accountLogin(values);
+    // console.log(res?.data?.accessToken);
     if (res?.data?.accessToken) {
+      const { route,permission } = res.data.user;
       localStorage.setItem("xplat-token", res.data.accessToken);
-      setLogin({
-        ...res.data.user,
-        name: res.data.user.userMess.name,
-        accessToken: res.data.accessToken,
-      });
       localStorage.setItem("account", res.data.user.account);
-      localStorage.setItem("name", res.data.user.userMess.name);
-      navigate("/user/center/messManager", { replace: true });
+      localStorage.setItem("name", res.data.user.nickName);
+
+      // 'admin'在初始化账户默认拥有全部权限，当然要自己作死不给权限就不怪系统了。
+      if(res.data.user.account !== "admin"){
+        setLogin({
+          ...res.data.user,
+          name: res.data.user.nickName,
+          accessToken: res.data.accessToken,
+          isLogin: true,
+          route:transPermissionToRoute(route),
+          permission,
+        });
+      }else{
+        setLogin({
+          ...login,
+          name: res.data.user.nickName,
+          accessToken: res.data.accessToken,
+          isLogin: true,
+          // route:transPermissionToRoute(route),
+          // permission,
+        })
+      }
+      navigate("/", { replace: true });
     }
   };
   return (
@@ -85,6 +116,7 @@ const Login = function(props) {
         }}
       >
         <Tabs activeKey={type} onChange={setType} centered>
+          <Tabs.TabPane key="fast" tab={i18n._(t`免账号快速登陆`)} />
           <Tabs.TabPane key="account" tab={i18n._(t`账号密码登陆`)} />
           <Tabs.TabPane key="mobile" tab={i18n._(t`手机号登陆`)} />
         </Tabs>
@@ -94,6 +126,23 @@ const Login = function(props) {
             content={i18n._(t`账户或密码错误（admin/ant.design)`)}
           />
         )}
+        {type === "fast" && (
+          <ProFormText.Password
+            name="password"
+            fieldProps={{
+              size: "large",
+              prefix: <LockTwoTone className={styles.prefixIcon} />,
+            }}
+            placeholder={i18n._(t`密码：any`)}
+            rules={[
+              {
+                required: true,
+                message: i18n._(t`请输入密码`),
+              },
+            ]}
+          />
+        )}
+
         {type === "account" && (
           <>
             <ProFormText
@@ -210,6 +259,6 @@ const Login = function(props) {
       </Space>
     </div>
   );
-}
+};
 
 export default Login;

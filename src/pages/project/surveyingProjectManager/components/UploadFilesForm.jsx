@@ -1,14 +1,14 @@
-import { Upload, Button, Modal } from "antd";
-import ImgCrop from "antd-img-crop";
-import { useSafeState } from "ahooks";
+import { Upload, Button, Modal } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import { useSafeState } from 'ahooks';
 // import { Image } from 'antd';
-import { UploadOutlined } from "@ant-design/icons";
-import ProCard from "@ant-design/pro-card";
+import { UploadOutlined } from '@ant-design/icons';
+import ProCard from '@ant-design/pro-card';
 
-import { useRecoilValue } from "recoil";
-import { loginStateAtom } from "@/atoms/login";
+import { useRecoilValue } from 'recoil';
+import { loginStateAtom } from '@/atoms/login';
 
-import paramConfig from "@/config/params";
+import paramConfig from '@/config/params';
 
 import {
   // projectMajorStepAtom,
@@ -17,7 +17,7 @@ import {
   // projectSubFlowAtom,
   fileFeatureAtom,
   codeIndexAtom,
-} from "../atoms";
+} from '../atoms';
 
 // const getStepFromCode = (code,step = 100) => {
 //   return [Math.floor(code / step) - 1,(code % step) - 1]
@@ -27,14 +27,15 @@ import {
 //   return (mainStep + 1) * step + subStep + 1;
 // }
 
-const getBase64 = (file) => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => resolve(reader.result);
-  reader.onerror = (error) => reject(error);
-});
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
-const UploadFilesForm = function(props) {
+const UploadFilesForm = function (props) {
   const { record } = props;
   const user = useRecoilValue(loginStateAtom);
   const [imagefileList, setImageFileList] = useSafeState([]);
@@ -49,8 +50,8 @@ const UploadFilesForm = function(props) {
 
   const [previewState, setPreviewState] = useSafeState({
     previewVisible: false,
-    previewImage: "",
-    previewTitle: "",
+    previewImage: '',
+    previewTitle: '',
   });
 
   const onImageFileChange = ({ fileList: newFileList }) => {
@@ -69,7 +70,7 @@ const UploadFilesForm = function(props) {
       previewImage: file.url || file.preview,
       previewVisible: true,
       previewTitle:
-        file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
+        file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
     });
   };
 
@@ -83,14 +84,14 @@ const UploadFilesForm = function(props) {
           directory
           progress={{
             strokeColor: {
-              "0%": "#108ee9",
-              "100%": "#87d069",
+              '0%': '#108ee9',
+              '100%': '#87d069',
             },
             strokeWidth: 3,
             format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
           }}
           headers={{
-            authorization: `Bearer ${localStorage.getItem("xplat-token")}`,
+            authorization: `Bearer ${localStorage.getItem('xplat-token')}`,
           }}
           data={{
             // 上传的额外参数
@@ -99,6 +100,7 @@ const UploadFilesForm = function(props) {
             codeIndex,
             category: record?.domainClassification,
             feature: fileFeature,
+            dbtype: 'project',
             refId: record.id,
           }}
         >
@@ -110,7 +112,7 @@ const UploadFilesForm = function(props) {
           <Upload
             listType="picture-card"
             headers={{
-              authorization: `Bearer ${localStorage.getItem("xplat-token")}`,
+              authorization: `Bearer ${localStorage.getItem('xplat-token')}`,
             }}
             data={{
               // 上传的额外参数
@@ -119,6 +121,7 @@ const UploadFilesForm = function(props) {
               codeIndex,
               category: record?.domainClassification,
               feature: fileFeature,
+              dbtype: 'project',
               refId: record.id,
             }}
             action={`${paramConfig.requestBaseUrl}/file`}
@@ -127,14 +130,14 @@ const UploadFilesForm = function(props) {
             onPreview={onPreview}
             progress={{
               strokeColor: {
-                "0%": "#108ee9",
-                "100%": "#87d068",
+                '0%': '#108ee9',
+                '100%': '#87d068',
               },
               strokeWidth: 3,
               format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
             }}
           >
-            {fileList.length < 5 && "+ 图片剪切上传"}
+            {fileList.length < 5 && '+ 图片剪切上传'}
           </Upload>
         </ImgCrop>
         <Modal
@@ -143,7 +146,7 @@ const UploadFilesForm = function(props) {
           footer={null}
           onCancel={handleCancel}
         >
-          <img style={{ width: "100%" }} src={previewState.previewImage} />
+          <img style={{ width: '100%' }} src={previewState.previewImage} />
           {/* <Image width={200} src={previewState.previewImage} /> */}
           {/* <ProForm >
                 <ProFormTextArea
@@ -157,6 +160,6 @@ const UploadFilesForm = function(props) {
       </ProCard>
     </ProCard>
   );
-}
+};
 
 export default UploadFilesForm;

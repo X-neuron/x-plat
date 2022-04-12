@@ -1,21 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 // import ProTable from '@ant-design/pro-table';
-import { EditableProTable } from "@ant-design/pro-table";
-import { FileWordOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Button, Switch, message, Upload } from "antd";
+import { EditableProTable } from '@ant-design/pro-table';
+import { FileWordOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Button, Switch, message, Upload } from 'antd';
 // import MySwitch from './MySwitch';
-import { TemplateHandler } from "easy-template-x";
-import { useSafeState } from "ahooks";
+import { TemplateHandler } from 'easy-template-x';
+import { useSafeState } from 'ahooks';
+// import { projectRecordAtom } from '../atoms';
+// import { useRecoilValue } from 'recoil';
+import { saveFilefromBlob } from '@/utils/utils';
+import paramConfig from '@/config/params';
 import {
   getProjectFiles,
   downloadProjectFileListTemplate,
   getProjectFileUrl,
   updateProjectFileMess,
-} from "../service";
-// import { projectRecordAtom } from '../atoms';
-// import { useRecoilValue } from 'recoil';
-import { saveFilefromBlob } from "@/utils/utils";
-import paramConfig from "@/config/params";
+} from '../service';
 
 // import { useSafeState } from 'ahooks';
 const downLoadFile = async (record) => {
@@ -32,7 +32,7 @@ const downLoadFile = async (record) => {
 const exportword = async (project, table) => {
   console.log(table);
   const res = await downloadProjectFileListTemplate(
-    "public/template/projectFileListTemplate.docx",
+    'public/template/projectFileListTemplate.docx',
   );
 
   const templateFile = new Blob([res]);
@@ -48,76 +48,74 @@ const exportword = async (project, table) => {
     })),
   });
 
-  saveFilefromBlob("project.name" + "查询文件清单" + ".docx", docx);
+  saveFilefromBlob('project.name' + '查询文件清单' + '.docx', docx);
 };
 
 const columns = [
   {
-    title: "文件名",
-    dataIndex: "name",
-    align: "right",
+    title: '文件名',
+    dataIndex: 'name',
+    align: 'right',
     // copyable: true,
     editable: false,
-    key: "name",
+    key: 'name',
   },
   {
-    title: "类型",
+    title: '类型',
     width: 60,
-    dataIndex: "type",
-    align: "right",
+    dataIndex: 'type',
+    align: 'right',
     editable: false,
-    key: "type",
+    key: 'type',
   },
   {
-    title: "纸质版",
-    dataIndex: "hasPaper",
+    title: '纸质版',
+    dataIndex: 'hasPaper',
     width: 70,
-    align: "center",
-    key: "hasPaper",
+    align: 'center',
+    key: 'hasPaper',
     editable: false,
     // valueType: 'select',
-    valueType: "radio",
+    valueType: 'radio',
     valueEnum: {
-      true: "有",
-      false: "无",
+      true: '有',
+      false: '无',
     },
-    render: (_, record) =>
+    render: (_, record) => (
       // return <MySwitch record={record} valueKey="hasPaper" size="small" key={record.id} />
       <Switch checked={record.hasPaper} size="small" key={record.id} />
-    ,
+    ),
   },
   {
-    title: "电子版",
-    dataIndex: "hasElectronic",
+    title: '电子版',
+    dataIndex: 'hasElectronic',
     width: 70,
-    align: "center",
-    key: "hasElectronic",
+    align: 'center',
+    key: 'hasElectronic',
     editable: false,
-    valueType: "radio",
+    valueType: 'radio',
     valueEnum: {
-      true: "有",
-      false: "无",
+      true: '有',
+      false: '无',
     },
-    render: (_, record) =>
+    render: (_, record) => (
       // return <MySwitch record={record} valueKey="hasElectronic" size="small" key={record.id} />
-      (
-        <Switch checked={record.hasElectronic} size="small" key={record.id} />
-      )
-    ,
+      <Switch checked={record.hasElectronic} size="small" key={record.id} />
+    ),
   },
   {
-    title: "数量",
-    dataIndex: "paperNumber",
+    title: '数量',
+    dataIndex: 'paperNumber',
     width: 80,
-    key: "paperNumber",
-    valueType: "digit",
+    key: 'paperNumber',
+    valueType: 'digit',
   },
   {
-    title: "创建时间",
+    title: '创建时间',
     width: 120,
-    dataIndex: "issueDate",
-    key: "issueDate",
-    valueType: "date",
+    dataIndex: 'issueDate',
+    key: 'issueDate',
+    valueType: 'date',
     sorter: (a, b) => a.issueDate - b.issueDate,
   },
   // {
@@ -130,8 +128,8 @@ const columns = [
   //   valueType: 'option',
   // },
   {
-    title: "操作",
-    valueType: "option",
+    title: '操作',
+    valueType: 'option',
     // width: 150,
     render: (text, record, _, action) => [
       <a
@@ -147,9 +145,9 @@ const columns = [
       ) : (
         <Upload
           headers={{
-            authorization: `Bearer ${localStorage.getItem("xplat-token")}`,
+            authorization: `Bearer ${localStorage.getItem('xplat-token')}`,
           }}
-          action={`${paramConfig.requestBaseUrl}/file/${record.id}`}
+          action={`${paramConfig.requestBaseUrl}/file/project/${record.id}`}
         >
           <Button>上传</Button>
         </Upload>
@@ -158,7 +156,7 @@ const columns = [
   },
 ];
 
-const ProjectFileTable = function(props) {
+const ProjectFileTable = function (props) {
   // const selectProject = useRecoilValue(projectRecordAtom);
   const { record } = props;
   const projectFileTable = useRef();
@@ -190,7 +188,6 @@ const ProjectFileTable = function(props) {
           data: res.data.data,
           success: true,
         });
-
       }}
       recordCreatorProps={false}
       pagination={{
@@ -204,7 +201,7 @@ const ProjectFileTable = function(props) {
         collapseRender: true,
         // filterType:"light",
         // labelWidth: 80,
-        layout: "horizontal",
+        layout: 'horizontal',
       }}
       // dateFormatter="string"
 
@@ -218,10 +215,10 @@ const ProjectFileTable = function(props) {
       //   };
       // }}
       editable={{
-        type: "multiple",
+        type: 'multiple',
         editableKeys,
         onSave: async (rowKey, record, row) => {
-          console.log("edit table is:", rowKey, record, row);
+          console.log('edit table is:', rowKey, record, row);
           // await waitTime(2000);
           if (record.id) {
             const res = await updateProjectFileMess(
@@ -234,7 +231,7 @@ const ProjectFileTable = function(props) {
               },
             );
             if (res.data) {
-              message.info("修改成功");
+              message.info('修改成功');
             }
           }
         },
@@ -254,6 +251,6 @@ const ProjectFileTable = function(props) {
       ]}
     />
   );
-}
+};
 
 export default ProjectFileTable;

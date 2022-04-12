@@ -2,34 +2,34 @@
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
-import { extend } from "umi-request";
-import { notification } from "antd";
-import paramConfig from "@/config/params";
-import { isUrl } from "@/utils/is";
+import { extend } from 'umi-request';
+import { notification } from 'antd';
+import paramConfig from '@/config/params';
+import { isUrl } from '@/utils/is';
 // change to your api backend
 const baseUrl = paramConfig.requestBaseUrl;
 
 const codeMessage = {
-  200: "服务器成功返回请求的数据。",
-  201: "新建或修改数据成功。",
-  202: "一个请求已经进入后台排队（异步任务）。",
-  204: "删除数据成功。",
-  400: "发出的请求有错误，服务器没有进行新建或修改数据的操作。",
-  401: "用户没有权限（令牌、用户名、密码错误）。",
-  403: "用户得到授权，但是访问是被禁止的。",
-  404: "发出的请求针对的是不存在的记录，服务器没有进行操作。",
-  406: "请求的格式不可得。",
-  409: "请求资源冲突。",
-  410: "请求的资源被永久删除，且不会再得到的。",
-  422: "当创建一个对象时，发生一个验证错误。",
-  500: "服务器发生错误，请检查服务器。",
-  502: "网关错误。",
-  503: "服务不可用，服务器暂时过载或维护。",
-  504: "网关超时。",
+  200: '服务器成功返回请求的数据。',
+  201: '新建或修改数据成功。',
+  202: '一个请求已经进入后台排队（异步任务）。',
+  204: '删除数据成功。',
+  400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
+  401: '用户没有权限（令牌、用户名、密码错误）。',
+  403: '用户得到授权，但是访问是被禁止的。',
+  404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
+  406: '请求的格式不可得。',
+  409: '请求资源冲突。',
+  410: '请求的资源被永久删除，且不会再得到的。',
+  422: '当创建一个对象时，发生一个验证错误。',
+  500: '服务器发生错误，请检查服务器。',
+  502: '网关错误。',
+  503: '服务不可用，服务器暂时过载或维护。',
+  504: '网关超时。',
 };
 /**
-  * 异常处理程序
-  */
+ * 异常处理程序
+ */
 
 const errorHandler = (error) => {
   const { response } = error;
@@ -43,27 +43,28 @@ const errorHandler = (error) => {
     });
   } else if (!response) {
     notification.error({
-      description: "您的网络发生异常，无法连接服务器",
-      message: "网络异常",
+      description: '您的网络发生异常，无法连接服务器',
+      message: '网络异常',
     });
   }
 
   return response;
 };
 /**
-  * 配置request请求时的默认参数
-  */
+ * 配置request请求时的默认参数
+ */
 
 const request = extend({
   errorHandler,
+  crossOrigin: true
   // 默认错误处理
   // credentials: "include", // 默认请求是否带上cookie
 });
 
 request.interceptors.request.use((url, options) => {
   const headers = {
-    Authorization: `Bearer ${localStorage.getItem("xplat-token")}`,
-    Operator: "admin",
+    Authorization: `Bearer ${localStorage.getItem('xplat-token')}`,
+    Operator: localStorage.getItem('account'),
   };
   return {
     url: isUrl(url) ? url : `${baseUrl}${url}`, // 是url 则默认使用之，不是则表明为后端请求...

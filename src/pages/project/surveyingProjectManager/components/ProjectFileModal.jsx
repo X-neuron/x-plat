@@ -1,9 +1,9 @@
-import { Button, message } from "antd";
-import ProForm, { ModalForm } from "@ant-design/pro-form";
-import { PlusOutlined } from "@ant-design/icons";
-import ProjectFileTable from "./ProjectFileTable";
+import { Button, message } from 'antd';
+import ProForm, { ModalForm } from '@ant-design/pro-form';
+import { PlusOutlined } from '@ant-design/icons';
+import ProjectFileTable from './ProjectFileTable';
 
-const ProjectFileModal = function(props) {
+const ProjectFileModal = function (props) {
   const { record, title } = props;
 
   return (
@@ -24,6 +24,6 @@ const ProjectFileModal = function(props) {
       <ProjectFileTable record={record} />
     </ModalForm>
   );
-}
+};
 
 export default ProjectFileModal;

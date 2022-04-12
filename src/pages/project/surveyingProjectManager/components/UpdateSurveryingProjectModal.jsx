@@ -1,4 +1,4 @@
-import { Button, message } from "antd";
+import { Button, message } from 'antd';
 import ProForm, {
   ModalForm,
   ProFormText,
@@ -10,26 +10,32 @@ import ProForm, {
   ProFormList,
   ProFormGroup,
   ProFormFieldSet,
-} from "@ant-design/pro-form";
-import dayjs from "dayjs";
-import { updateProjectMetaMess } from "../service";
-import { getCategoryDescendantByName } from "@/service";
+} from '@ant-design/pro-form';
+import dayjs from 'dayjs';
+import { useRecoilValue } from 'recoil';
+import { originFromAtom, domainClassAtom } from '@/atoms/share';
+// import { getCategoryDescendantByName } from '@/service';
+import { updateProjectMetaMess } from '../service';
+
 
 // const dateFormat = 'YYYY-MM-DD';
-const UpdateSurveryingProjectModal = function(props) {
+const UpdateSurveryingProjectModal = function (props) {
   const { record } = props;
-  // console.log('update project',record);
+
+  const originFrom = useRecoilValue(originFromAtom);
+  const domainClass = useRecoilValue(domainClassAtom);
+
   return (
     <ModalForm
       title={`修改 ${record.name} 项目元信息`}
       trigger={<Button>修改</Button>}
       modalProps={{
-        onCancel: () => console.log("run"),
+        onCancel: () => console.log('run'),
       }}
       onFinish={async (values) => {
         const res = await updateProjectMetaMess(values, record.id);
         console.log(res);
-        message.success("提交成功");
+        message.success('提交成功');
         return true;
       }}
       initialValues={{
@@ -40,23 +46,10 @@ const UpdateSurveryingProjectModal = function(props) {
       <ProFormSelect
         label="项目来源"
         name="orginateFrom"
-        request={async () => {
-          const res = await getCategoryDescendantByName(
-            paramConfig.projectOrigin,
-          );
-          // 自动丢弃 子类
-          return res.data.map((item) => ({
-            label: item.name,
-            value: item.name,
-            key: item.name,
-          }));
-        }}
-        // fieldProps={{
-        //   defaultValue: record.orginateFrom,
-        // }}
+        options={originFrom}
       />
       <ProFormText
-        rules={[{ required: true, message: "项目名不能为空" }]}
+        rules={[{ required: true, message: '项目名不能为空' }]}
         name="name"
         label="项目名称"
         placeholder="填写项目名称"
@@ -96,23 +89,13 @@ const UpdateSurveryingProjectModal = function(props) {
           //   '测绘工程': '测绘工程',
           //   '计算机工程': '计算机工程',
           // }}
-          request={async () => {
-            const res = await getCategoryDescendantByName(
-              paramConfig.domainCategory,
-            );
-            // 自动丢弃 子类
-            return res?.data.map((item) => ({
-              label: item.name,
-              value: item.name,
-              key: item.name,
-            }));
-          }}
+          options={domainClass}
           // fieldProps={{
           //   defaultValue: record.domainClassification,
           // }}
         />
         <ProFormText
-          rules={[{ required: true, message: "项目负责人不能为空" }]}
+          rules={[{ required: true, message: '项目负责人不能为空' }]}
           name="charger"
           label="项目负责人"
           placeholder="项目负责人不能为空"
@@ -124,19 +107,19 @@ const UpdateSurveryingProjectModal = function(props) {
           options={[
             {
               value: 0,
-              label: "等待启动",
+              label: '等待启动',
             },
             {
               value: 1,
-              label: "正常进行",
+              label: '正常进行',
             },
             {
               value: 2,
-              label: "暂停",
+              label: '暂停',
             },
             {
               value: 3,
-              label: "取消",
+              label: '取消',
             },
           ]}
           placeholder="请选择项目状态"
@@ -153,23 +136,23 @@ const UpdateSurveryingProjectModal = function(props) {
           options={[
             {
               value: 0,
-              label: "不重要",
+              label: '不重要',
             },
             {
               value: 1,
-              label: "一般",
+              label: '一般',
             },
             {
               value: 2,
-              label: "重要",
+              label: '重要',
             },
             {
               value: 3,
-              label: "紧急",
+              label: '紧急',
             },
             {
               value: 4,
-              label: "十分紧急",
+              label: '十分紧急',
             },
           ]}
           placeholder="请选择项目状态"
@@ -188,6 +171,11 @@ const UpdateSurveryingProjectModal = function(props) {
           // }}
         />
       </ProForm.Group>
+      <ProFormText
+        name="relys"
+        label="申报依据文件"
+        placeholder="比如：海参直[2019]1318"
+      />
       <ProFormText
         name="keys"
         label="可用于快速检索的关键字"
@@ -216,6 +204,6 @@ const UpdateSurveryingProjectModal = function(props) {
       />
     </ModalForm>
   );
-}
+};
 
 export default UpdateSurveryingProjectModal;

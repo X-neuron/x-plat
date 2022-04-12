@@ -1,6 +1,6 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 export const tabsModelAtom = atom({
-  key: "tabsModelAtom",
+  key: 'tabsModelAtom',
   default: true,
 });

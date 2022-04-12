@@ -1,67 +1,49 @@
-import { generatePath } from "react-router";
-import request from "@/utils/request";
-
-export async function getResClasses(params) {
-  return request("/resource/class", {
-    method: "get",
-    params: {
-      page: params.current,
-      take: params.pageSize,
-    },
-  });
-}
-
-export async function createResClass(params) {
-  return request("/resource/class", {
-    method: "post",
-    data: {
-      ...params,
-      type: 1, // 默认为类别
-    },
-  });
-}
+import { generatePath } from 'react-router';
+import request from '@/utils/request';
 
 // 暂不支持分页，貌似非大企，一般模块也就十多个。
-export async function getResClassModules(classId, prarms) {
-  return request(generatePath("/resource/class/:id/module", { id: classId }), {
-    method: "get",
+export async function getResourceByParentId(parentId) {
+  if (parentId === 'root') {
+    return request('/resource', {
+      method: 'get',
+    });
+  }
+  return request(generatePath('/resource/:id', { id: parentId }), {
+    method: 'get',
   });
 }
 
-export async function createResClassModule(classId, params) {
-  return request(generatePath("/resource/class/:id/module", { id: classId }), {
-    method: "post",
-    data: {
-      ...params,
-      type: 2, // 默认为模块
+export async function getResource() {
+  return request('/resource/all', {
+    method: 'get',
+    params: {
+      name: 'root',
     },
   });
 }
 
-export async function getResModuleApi(classId, moduleId, params) {
-  return request(
-    generatePath("/resource/class/:classId/module/:moduleId/api", {
-      classId,
-      moduleId,
-    }),
-    {
-      method: "get",
-    },
-  );
+export async function createResource(params, parentId) {
+  if (!parentId) {
+    return request('/resource', {
+      method: 'post',
+      data: params,
+    });
+  }
+  return request(generatePath('/resource/:id', { id: parentId }), {
+    method: 'post',
+    data: params,
+  });
 }
 
-export async function createResModuleApi(classId, moduleId, params) {
-  return request(
-    generatePath("/resource/class/:classId/module/:moduleId/api", {
-      classId,
-      moduleId,
-    }),
-    {
-      method: "post",
-      data: {
-        ...params,
-        type: 3, // 默认为接口
-      },
-    },
-  );
+export async function updateResource(params, parentId) {
+  return request(generatePath('/resource/:id', { id: parentId }), {
+    method: 'patch',
+    data: params,
+  });
+}
+
+export async function deleteResource(parentId) {
+  return request(generatePath('/resource/:id', { id: parentId }), {
+    method: 'delete',
+  });
 }

@@ -1,21 +1,21 @@
-import { Tooltip, Switch } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
-import { i18n } from "@lingui/core";
-import { t } from "@lingui/macro";
-import { useRecoilState } from "recoil";
-import SelectLang from "@/components/SelectLang";
-import Avatar from "./AvatarDropdown";
-import styles from "./index.less";
-import { tabsModelAtom } from "@/atoms/tabsModel";
+import { Tooltip, Switch } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { i18n } from '@lingui/core';
+import { t } from '@lingui/macro';
+import { useRecoilState } from 'recoil';
+import SelectLang from '@/components/SelectLang';
+import Avatar from './AvatarDropdown';
+import styles from './index.less';
+import { tabsModelAtom } from '@/atoms/tabsModel';
 
 const inlineStyle = {
-  cursor: "pointer",
-  padding: "12px",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
+  cursor: 'pointer',
+  padding: '12px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   fontSize: 18,
-  verticalAlign: "middle",
+  verticalAlign: 'middle',
 };
 
 const GlobalHeaderRight = function (props) {
@@ -44,7 +44,7 @@ const GlobalHeaderRight = function (props) {
       <Tooltip title="使用文档">
         <a
           style={{
-            color: "inherit",
+            color: 'inherit',
           }}
           target="_blank"
           href="https://pro.ant.design/docs/getting-started"

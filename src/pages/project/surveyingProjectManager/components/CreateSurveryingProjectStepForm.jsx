@@ -17,49 +17,57 @@ import ProCard from "@ant-design/pro-card";
 import { useSafeState, useCreation, useMount } from "ahooks";
 import ProList from "@ant-design/pro-list";
 import _ from "lodash";
-import { createProject, getProjectStepTemplate } from "../service";
-import { getCategoryDescendantByName, getCategoryTreeByName } from "@/service";
 import paramConfig from "@/config/params";
+import { useRecoilValue } from 'recoil';
+import { originFromAtom, domainClassAtom } from '@/atoms/share';
+import { transToAntdTreeData, filterTreesFromSelectedKey } from "@/utils/utils";
+import { getCategoryTreeByName } from "@/service";
+
+import { createProject, getProjectStepTemplate } from "../service";
 import SaveTemplateModal from "./SaveTemplateModal";
+// import { projectOrgAtom } from "../atoms";
+
 // const { SHOW_PARENT } = TreeSelect;
 
-const transToAntdTreeData = (tree) => {
-  const toAntdTrees = (array) => array?.map((item) => {
-    const returnValue = {
-      id: item.id,
-      key: item.id,
-      value: item.id,
-      title: item.name,
-      isLeaf: item.children.length === 0,
-      // disableCheckbox:item.children.length === 0 ? true:false,
-      // selectable: item.children.length !== 0? true:false //叶子节点不可选，子步骤不会修改
-    };
-    if (item.children.length !== 0) {
-      returnValue.children = toAntdTrees(item.children);
-    }
-    return returnValue;
-  });
-  const ret = toAntdTrees(tree);
-  return ret;
-};
+// const transToAntdTreeData = (tree) => {
+//   const toAntdTrees = (array) => array?.map((item) => {
+//     const returnValue = {
+//       id: item.id,
+//       key: item.id,
+//       value: item.id,
+//       title: item.name,
+//       isLeaf: item.children.length === 0,
+//       // disableCheckbox:item.children.length === 0 ? true:false,
+//       // selectable: item.children.length !== 0? true:false //叶子节点不可选，子步骤不会修改
+//     };
+//     if (item.children.length !== 0) {
+//       returnValue.children = toAntdTrees(item.children);
+//     }
+//     return returnValue;
+//   });
+//   const ret = toAntdTrees(tree);
+//   return ret;
+// };
 
-const filterTreesFromSelectedKey = (tree, keys) => {
-  const cloneTree = _.cloneDeep(tree);
-  const filterTree = (data) => {
-    if (!data) return;
-    const newData = data?.filter((item) => {
-      if (item?.children?.length !== 0) {
-        item.children = filterTree(item.children);
-      }
-      return keys.find((key) => key === item.id);
-    });
-    return newData;
-  };
-  return filterTree(cloneTree);
-};
+// const filterTreesFromSelectedKey = (tree, keys) => {
+//   const cloneTree = _.cloneDeep(tree);
+//   const filterTree = (data) => {
+//     if (!data) return;
+//     const newData = data?.filter((item) => {
+//       if (item?.children?.length !== 0) {
+//         item.children = filterTree(item.children);
+//       }
+//       return keys.find((key) => key === item.id);
+//     });
+//     return newData;
+//   };
+//   return filterTree(cloneTree);
+// };
 
-const CreateSurveryingProjectStepForm = function(props) {
+const CreateSurveryingProjectStepForm = function (props) {
   const formRef = useRef();
+
+  // const projectOrg = useRecoilValue(projectOrgAtom);
 
   const allStepsTreeDataSelectedKeys = useRef();
   // treeData 用来支持模板的tree数据，依据allStepsTreeDataSelectedKeys 生成
@@ -71,6 +79,9 @@ const CreateSurveryingProjectStepForm = function(props) {
     selectedTempalteRec: null,
     templateStepsTreeData: [],
   });
+
+  const originFrom = useRecoilValue(originFromAtom);
+  const domainClass = useRecoilValue(domainClassAtom);
 
   const [stepTemplateList, setStepTemplateList] = useSafeState([]);
 
@@ -150,17 +161,18 @@ const CreateSurveryingProjectStepForm = function(props) {
         <ProFormSelect
           label="项目来源"
           name="orginateFrom"
-          request={async () => {
-            const res = await getCategoryDescendantByName(
-              paramConfig.projectOrigin,
-            );
-            // 自动丢弃 子类
-            return res.data.map((item) => ({
-              label: item.name,
-              value: item.name,
-              key: item.name,
-            }));
-          }}
+          options={originFrom}
+          // request={async () => {
+          //   const res = await getCategoryDescendantByName(
+          //     paramConfig.projectOrigin,
+          //   );
+          //   // 自动丢弃 子类
+          //   return res.data.map((item) => ({
+          //     label: item.name,
+          //     value: item.name,
+          //     key: item.name,
+          //   }));
+          // }}
         />
         <ProFormText
           rules={[{ required: true, message: "项目名不能为空" }]}
@@ -294,17 +306,7 @@ const CreateSurveryingProjectStepForm = function(props) {
             //   '测绘工程': '测绘工程',
             //   '计算机工程': '计算机工程',
             // }}
-            request={async () => {
-              const res = await getCategoryDescendantByName(
-                paramConfig.domainCategory,
-              );
-              // 自动丢弃 子类
-              return res?.data.map((item) => ({
-                label: item.name,
-                value: item.name,
-                key: item.name,
-              }));
-            }}
+            options={domainClass}
           />
           {/* <ProFormSelect
             label="使用流程类别"
@@ -392,6 +394,11 @@ const CreateSurveryingProjectStepForm = function(props) {
           />
         </ProForm.Group>
         <ProFormText
+          name="relys"
+          label="申报依据文件"
+          placeholder="比如：海参直[2019]1318"
+        />
+        <ProFormText
           name="keys"
           label="可用于快速检索的关键字"
           placeholder="关键字"
@@ -411,6 +418,6 @@ const CreateSurveryingProjectStepForm = function(props) {
       </StepsForm.StepForm>
     </StepsForm>
   );
-}
+};
 
 export default CreateSurveryingProjectStepForm;

@@ -1,74 +1,74 @@
-const fs = require("fs");
-const path = require("path");
-const webpack = require("webpack");
-const resolve = require("resolve");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const Webpackbar = require("webpackbar");
+const fs = require('fs');
+const path = require('path');
+const webpack = require('webpack');
+const resolve = require('resolve');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Webpackbar = require('webpackbar');
 
-const CopyPlugin = require("copy-webpack-plugin");
-const CircularDependencyPlugin = require("circular-dependency-plugin");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 
-const TerserPlugin = require("terser-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 // const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const SafePostCssParser = require("postcss-safe-parser");
-const postcssNormalize = require("postcss-normalize");
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const SafePostCssParser = require('postcss-safe-parser');
+const postcssNormalize = require('postcss-normalize');
 // const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
-const ESLintPlugin = require("eslint-webpack-plugin");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 // react-dev-utils
 // const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin");
-const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpackPlugin");
+const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 
-const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
-const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
-const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
-const getCacheIdentifier = require("react-dev-utils/getCacheIdentifier");
+const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
+const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
+const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 
-const createEnvironmentHash = require("./createEnvironmentHash");
+const createEnvironmentHash = require('./createEnvironmentHash');
 // const ignoredFiles = require('react-dev-utils/ignoredFiles');
 
 // const DashboardPlugin = require('webpack-dashboard/plugin');
 
 const webpackDevClientEntry = require.resolve(
-  "react-dev-utils/webpackHotDevClient",
+  'react-dev-utils/webpackHotDevClient',
 );
 const reactRefreshOverlayEntry = require.resolve(
-  "react-dev-utils/refreshOverlayInterop",
+  'react-dev-utils/refreshOverlayInterop',
 );
 
 // resolve css less scss support module import
-const paths = require("./paths");
-const modules = require("./modules");
-const getClientEnvironment = require("./env");
+const paths = require('./paths');
+const modules = require('./modules');
+const getClientEnvironment = require('./env');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 
 // Some apps do not need the benefits of saving a web request, so not inlining the chunk
 // makes for a smoother build process.
-const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
+const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
-const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === "true";
+const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
 
 const imageInlineSizeLimit = parseInt(
-  process.env.IMAGE_INLINE_SIZE_LIMIT || "10000",
+  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
 );
 
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 // Check if Tailwind config exists
 const useTailwind = fs.existsSync(
-  path.join(paths.appPath, "tailwind.config.js"),
+  path.join(paths.appPath, 'tailwind.config.js'),
 );
 
 // Get the path to the uncompiled service worker (if it exists).
@@ -99,13 +99,13 @@ module.exports = function () {
   const env = getClientEnvironment(paths.publicUrlOrPath.slice(0, -1));
   // const isEnvDevelopment = webpackEnv === "development";
   // const isEnvProduction = webpackEnv === "production";
-  const isEnvDevelopment = env.raw.NODE_ENV === "development";
-  const isEnvProduction = env.raw.NODE_ENV === "production";
+  const isEnvDevelopment = env.raw.NODE_ENV === 'development';
+  const isEnvProduction = env.raw.NODE_ENV === 'production';
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
   const isEnvProductionProfile =
-    isEnvProduction && process.argv.includes("--profile");
+    isEnvProduction && process.argv.includes('--profile');
 
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
@@ -114,71 +114,71 @@ module.exports = function () {
   const getStyleLoaders = (testReg, loader, options) => {
     function applyLoaders(isCSSModules) {
       const loaders = [
-        isEnvDevelopment && require.resolve("style-loader"),
+        isEnvDevelopment && require.resolve('style-loader'),
         isEnvProduction && {
           loader: MiniCssExtractPlugin.loader,
           // css is located in `static/css`, use '../../' to locate index.html folder
           // in production `paths.publicUrlOrPath` can be a relative path
-          options: paths.publicUrlOrPath.startsWith(".")
+          options: paths.publicUrlOrPath.startsWith('.')
             ? {
-              // publicPath: 'auto',
-              hmr: isEnvDevelopment,
-            }
+                // publicPath: 'auto',
+                hmr: isEnvDevelopment,
+              }
             : {},
         },
         {
-          loader: require.resolve("css-loader"),
+          loader: require.resolve('css-loader'),
           options: {
             importLoaders: loader ? 1 : 0,
             ...(isCSSModules
               ? {
-                modules: {
-                  localIdentName: "[local]___[hash:base64:5]",
-                  getLocalIdent: getCSSModuleLocalIdent,
-                },
-              }
+                  modules: {
+                    localIdentName: '[local]___[hash:base64:5]',
+                    getLocalIdent: getCSSModuleLocalIdent,
+                  },
+                }
               : {}),
           },
         },
         {
-          loader: "postcss-loader",
+          loader: 'postcss-loader',
           options: {
             // Necessary for external CSS imports to work
             // https://github.com/facebook/create-react-app/issues/2677
             postcssOptions: {
               // Options for PostCSS as we reference these options twice
               // Adds vendor prefixing based on your specified browser support in
-              ident: "postcss",
+              ident: 'postcss',
               plugins: !useTailwind
                 ? [
-                  "postcss-flexbugs-fixes",
-                  [
-                    "postcss-preset-env",
-                    {
-                      autoprefixer: {
-                        flexbox: "no-2009",
+                    'postcss-flexbugs-fixes',
+                    [
+                      'postcss-preset-env',
+                      {
+                        autoprefixer: {
+                          flexbox: 'no-2009',
+                        },
+                        stage: 3,
                       },
-                      stage: 3,
-                    },
-                  ],
-                  // Adds PostCSS Normalize as the reset css with default options,
-                  // so that it honors browserslist config in package.json
-                  // which in turn let's users customize the target behavior as per their needs.
-                  "postcss-normalize",
-                ]
+                    ],
+                    // Adds PostCSS Normalize as the reset css with default options,
+                    // so that it honors browserslist config in package.json
+                    // which in turn let's users customize the target behavior as per their needs.
+                    'postcss-normalize',
+                  ]
                 : [
-                  "tailwindcss",
-                  "postcss-flexbugs-fixes",
-                  [
-                    "postcss-preset-env",
-                    {
-                      autoprefixer: {
-                        flexbox: "no-2009",
+                    'tailwindcss',
+                    'postcss-flexbugs-fixes',
+                    [
+                      'postcss-preset-env',
+                      {
+                        autoprefixer: {
+                          flexbox: 'no-2009',
+                        },
+                        stage: 3,
                       },
-                      stage: 3,
-                    },
+                    ],
                   ],
-                ],
             },
             sourceMap: isEnvDevelopment,
           },
@@ -217,10 +217,10 @@ module.exports = function () {
   };
 
   return {
-    mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
+    mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
-    devtool: isEnvProduction ? false : "cheap-module-source-map", // "eval-cheap-module-source-map"
+    devtool: isEnvProduction ? false : 'cheap-module-source-map', // "eval-cheap-module-source-map"
 
     entry: paths.appIndexJs,
 
@@ -232,13 +232,13 @@ module.exports = function () {
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
       filename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].js"
-        : isEnvDevelopment && "static/js/bundle.js",
+        ? 'static/js/[name].[contenthash:8].js'
+        : isEnvDevelopment && 'static/js/bundle.js',
       // There are also additional JS chunk files if you use code splitting.
       chunkFilename: isEnvProduction
-        ? "static/js/[name].[contenthash:8].chunk.js"
-        : isEnvDevelopment && "static/js/[name].chunk.js",
-      assetModuleFilename: "static/media/[name].[hash][ext]",
+        ? 'static/js/[name].[contenthash:8].chunk.js'
+        : isEnvDevelopment && 'static/js/[name].chunk.js',
+      assetModuleFilename: 'static/media/[name].[hash][ext]',
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
@@ -246,20 +246,20 @@ module.exports = function () {
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
         ? (info) =>
-          path
-            .relative(paths.appSrc, info.absoluteResourcePath)
-            .replace(/\\/g, "/")
+            path
+              .relative(paths.appSrc, info.absoluteResourcePath)
+              .replace(/\\/g, '/')
         : isEnvDevelopment &&
           ((info) =>
-            path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")),
+            path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
     cache: {
-      type: "filesystem",
+      type: 'filesystem',
       version: createEnvironmentHash(env.raw),
       cacheDirectory: paths.appWebpackCache,
-      store: "pack",
+      store: 'pack',
       buildDependencies: {
-        defaultWebpack: ["webpack/lib/"],
+        defaultWebpack: ['webpack/lib/'],
         config: [__filename],
         tsconfig: [paths.appTsConfig, paths.appJsConfig].filter((f) =>
           fs.existsSync(f),
@@ -267,14 +267,14 @@ module.exports = function () {
       },
     },
     infrastructureLogging: {
-      level: "none",
+      level: 'none',
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ["node_modules", paths.appNodeModules].concat(
+      modules: ['node_modules', paths.appNodeModules].concat(
         modules.additionalModulePaths || [],
       ),
       // These are the reasonable defaults supported by the Node ecosystem.
@@ -285,16 +285,16 @@ module.exports = function () {
       // for React Native Web.
       extensions: paths.moduleFileExtensions
         .map((ext) => `.${ext}`)
-        .filter((ext) => useTypeScript || !ext.includes("ts")),
+        .filter((ext) => useTypeScript || !ext.includes('ts')),
       alias: {
-        "@": path.resolve(process.cwd(), "src"),
+        '@': path.resolve(process.cwd(), 'src'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-        "react-native": "react-native-web",
+        'react-native': 'react-native-web',
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
-          "react-dom$": "react-dom/profiling",
-          "scheduler/tracing": "scheduler/tracing-profiling",
+          'react-dom$': 'react-dom/profiling',
+          'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
       },
@@ -303,7 +303,7 @@ module.exports = function () {
       // node_modules:path.resolve(module.cwd(), "../../node_modules"),
       // modules:[path.resolve(process.cwd(), "../../node_modules"),"node_modules"],
 
-      mainFields: ["browser", "module", "jsnext:main", "main"],
+      mainFields: ['browser', 'module', 'jsnext:main', 'main'],
       // 处理 yarn 全局安装时的 resolve 问题->推测应该是小白
     },
     optimization: {
@@ -313,9 +313,9 @@ module.exports = function () {
       removeAvailableModules: isEnvProduction,
       removeEmptyChunks: isEnvProduction,
 
-      moduleIds: "deterministic",
-      chunkIds: "deterministic",
-      mangleExports: "deterministic",
+      moduleIds: 'deterministic',
+      chunkIds: 'deterministic',
+      mangleExports: 'deterministic',
 
       usedExports: true,
       minimizer: [
@@ -371,45 +371,45 @@ module.exports = function () {
       splitChunks: isEnvDevelopment
         ? false
         : {
-          chunks: "async",
-          minSize: 30720,
-          minChunks: 1,
-          maxAsyncRequests: 6,
-          maxInitialRequests: 4,
-          automaticNameDelimiter: "-",
-          cacheGroups: {
-            common: {
-              name: "common",
-              chunks: "all",
-              priority: -20,
-              minChunks: 2,
-              reuseExistingChunk: true,
+            chunks: 'async',
+            minSize: 30720,
+            minChunks: 1,
+            maxAsyncRequests: 6,
+            maxInitialRequests: 4,
+            automaticNameDelimiter: '-',
+            cacheGroups: {
+              common: {
+                name: 'common',
+                chunks: 'all',
+                priority: -20,
+                minChunks: 2,
+                reuseExistingChunk: true,
+              },
+              vendors: {
+                name: 'vendors',
+                test: /[\\/]node_modules[\\/]/,
+                chunks: 'all',
+                priority: -10,
+              },
+              react: {
+                name: 'react',
+                test: /[\\/]node_modules[\\/](scheduler|react|react-dom|prop-types)/,
+                chunks: 'all',
+                enforce: true,
+              },
+              antd: {
+                name: 'antd',
+                test: /[\\/]node_modules[\\/](@ant-design|antd)[\\/]/,
+                chunks: 'all',
+              },
+              // styles: {
+              //   name: "styles",
+              //   test: /\.css$/,
+              //   chunks: "all",
+              //   enforce: true
+              // }
             },
-            vendors: {
-              name: "vendors",
-              test: /[\\/]node_modules[\\/]/,
-              chunks: "all",
-              priority: -10,
-            },
-            react: {
-              name: "react",
-              test: /[\\/]node_modules[\\/](scheduler|react|react-dom|prop-types)/,
-              chunks: "all",
-              enforce: true,
-            },
-            antd: {
-              name: "antd",
-              test: /[\\/]node_modules[\\/](@ant-design|antd)[\\/]/,
-              chunks: "all",
-            },
-            // styles: {
-            //   name: "styles",
-            //   test: /\.css$/,
-            //   chunks: "all",
-            //   enforce: true
-            // }
           },
-        },
     },
     module: {
       strictExportPresence: true,
@@ -435,7 +435,7 @@ module.exports = function () {
           // },
           use: [
             {
-              loader: "babel-loader",
+              loader: 'babel-loader',
               options: {
                 babelrc: true,
                 // "exclude": [
@@ -452,7 +452,7 @@ module.exports = function () {
                 cacheCompression: false,
                 compact: isEnvProduction,
                 plugins: [
-                  isEnvDevelopment && require.resolve("react-refresh/babel"),
+                  isEnvDevelopment && require.resolve('react-refresh/babel'),
                 ].filter(Boolean),
               },
             },
@@ -461,7 +461,7 @@ module.exports = function () {
         {
           test: /\.(js|mjs)$/,
           exclude: /@babel(?:\/|\\{1,2})runtime/,
-          loader: require.resolve("babel-loader"),
+          loader: require.resolve('babel-loader'),
           options: {
             configFile: false,
             compact: false,
@@ -482,13 +482,13 @@ module.exports = function () {
         //   enforce: 'pre',
         // },
         getStyleLoaders(/\.(css)(\?.*)?$/),
-        getStyleLoaders(/\.(less)(\?.*)?$/, "less-loader", {
+        getStyleLoaders(/\.(less)(\?.*)?$/, 'less-loader', {
           sourceMap: isEnvDevelopment,
           lessOptions: {
             javascriptEnabled: true,
           },
         }),
-        getStyleLoaders(/\.(scss|sass)(\?.*)?$/, "sass-loader", {
+        getStyleLoaders(/\.(scss|sass)(\?.*)?$/, 'sass-loader', {
           sourceMap: isEnvDevelopment,
         }),
         // {
@@ -506,7 +506,7 @@ module.exports = function () {
         // },
         {
           test: /\.(txt|text|md)$/,
-          type: "asset/resource",
+          type: 'asset/resource',
           // use: [
           //   {
           //     loader: 'raw-loader',
@@ -515,7 +515,7 @@ module.exports = function () {
         },
         {
           test: /\.(bmp|png|jpe?g|gif|webp|ico|eot|woff|woff2|ttf)(\?.*)?$/,
-          type: "asset",
+          type: 'asset',
           parser: {
             dataUrlCondition: {
               maxSize: imageInlineSizeLimit,
@@ -526,7 +526,7 @@ module.exports = function () {
           test: /\.svg$/,
           use: [
             {
-              loader: require.resolve("@svgr/webpack"),
+              loader: require.resolve('@svgr/webpack'),
               options: {
                 prettier: false,
                 svgo: false,
@@ -538,9 +538,9 @@ module.exports = function () {
               },
             },
             {
-              loader: require.resolve("file-loader"),
+              loader: require.resolve('file-loader'),
               options: {
-                name: "static/media/[name].[hash].[ext]",
+                name: 'static/media/[name].[hash].[ext]',
               },
             },
           ],
@@ -550,11 +550,11 @@ module.exports = function () {
         },
         {
           test: /\.html$/,
-          use: "html-loader",
+          use: 'html-loader',
         },
         {
           test: /\.(mp4|webm)$/,
-          type: "asset",
+          type: 'asset',
           // use: {
           //   loader: 'url-loader',
           //   options: {
@@ -564,8 +564,8 @@ module.exports = function () {
         },
         {
           test: [/\.avif$/],
-          type: "asset",
-          mimetype: "image/avif",
+          type: 'asset',
+          mimetype: 'image/avif',
           parser: {
             dataUrlCondition: {
               maxSize: imageInlineSizeLimit,
@@ -576,74 +576,74 @@ module.exports = function () {
         // }
       ],
     },
-    [isEnvDevelopment ? "devServer" : "ignoreWarnings"]: isEnvDevelopment
+    [isEnvDevelopment ? 'devServer' : 'ignoreWarnings']: isEnvDevelopment
       ? {
-        devMiddleware: {
-          // It is important to tell WebpackDevServer to use the same "publicPath" path as
-          // we specified in the webpack config. When homepage is '.', default to serving
-          // from the root.
-          // remove last slash so user can land on `/test` instead of `/test/`
-          publicPath: paths.publicUrlOrPath.slice(0, -1),
-        },
-        // hot: true,
-        allowedHosts: "all",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "*",
-          "Access-Control-Allow-Headers": "*",
-        },
-        client: {
-          webSocketURL: {
-            // Enable custom sockjs pathname for websocket connection to hot reloading server.
-            // Enable custom sockjs hostname, pathname and port for websocket connection
-            // to hot reloading server.
-            // hostname: sockHost,
-            // pathname: sockPath,
-            // port: sockPort,
+          devMiddleware: {
+            // It is important to tell WebpackDevServer to use the same "publicPath" path as
+            // we specified in the webpack config. When homepage is '.', default to serving
+            // from the root.
+            // remove last slash so user can land on `/test` instead of `/test/`
+            publicPath: paths.publicUrlOrPath.slice(0, -1),
           },
-          overlay: {
-            errors: true,
-            warnings: true,
+          // hot: true,
+          allowedHosts: 'all',
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*',
           },
-          webSocketTransport: "ws",
-          progress: true,
-        },
-        webSocketServer: "ws",
-        // ipc: true,
-        // webSocketServer: "sockjs",
-        // allowedHosts: "all",
-        compress: false,
-        static: [
-          {
-            directory: paths.appPublic,
-            publicPath: [paths.publicUrlOrPath],
-            // publicPath: "/static",
-            serveIndex: true,
-            watch: {
-              ignored: /node_modules/,
+          client: {
+            webSocketURL: {
+              // Enable custom sockjs pathname for websocket connection to hot reloading server.
+              // Enable custom sockjs hostname, pathname and port for websocket connection
+              // to hot reloading server.
+              // hostname: sockHost,
+              // pathname: sockPath,
+              // port: sockPort,
             },
+            overlay: {
+              errors: true,
+              warnings: true,
+            },
+            webSocketTransport: 'ws',
+            progress: true,
           },
-        ],
-        // host: "local-ip",
-        port: "8080",
-        historyApiFallback: {
-          // Paths with dots should still use the history fallback.
-          // See https://github.com/facebook/create-react-app/issues/387.
-          disableDotRule: true,
-          index: paths.publicUrlOrPath,
-        },
-        // historyApiFallback: {
-        //   // Paths with dots should still use the history fallback.
-        //   // See https://github.com/facebook/create-react-app/issues/387.
-        //   disableDotRule: true,
-        //   index: paths.publicUrlOrPath,
-        // },
-        host: "127.0.0.1",
-        // port: 8080, // 设置默认监听端口，如果省略，默认为"8080"
-      }
+          webSocketServer: 'ws',
+          // ipc: true,
+          // webSocketServer: "sockjs",
+          // allowedHosts: "all",
+          compress: false,
+          static: [
+            {
+              directory: paths.appPublic,
+              publicPath: [paths.publicUrlOrPath],
+              // publicPath: "/static",
+              serveIndex: true,
+              watch: {
+                ignored: /node_modules/,
+              },
+            },
+          ],
+          // host: "local-ip",
+          port: '8090',
+          historyApiFallback: {
+            // Paths with dots should still use the history fallback.
+            // See https://github.com/facebook/create-react-app/issues/387.
+            disableDotRule: true,
+            index: paths.publicUrlOrPath,
+          },
+          // historyApiFallback: {
+          //   // Paths with dots should still use the history fallback.
+          //   // See https://github.com/facebook/create-react-app/issues/387.
+          //   disableDotRule: true,
+          //   index: paths.publicUrlOrPath,
+          // },
+          host: '127.0.0.1',
+          // port: 8080, // 设置默认监听端口，如果省略，默认为"8080"
+        }
       : [],
     // target: ['web', 'es5'],
-    stats: "normal",
+    stats: 'normal',
     plugins: [
       // isEnvProduction && new CleanWebpackPlugin(),
       new Webpackbar(),
@@ -688,19 +688,19 @@ module.exports = function () {
         template: paths.appHtml,
         ...(isEnvProduction
           ? {
-            minify: {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true,
-            },
-          }
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
           : undefined),
       }),
       // Inlines the webpack runtime script. This script is too small to warrant
@@ -748,7 +748,7 @@ module.exports = function () {
         }),
       isEnvProduction &&
         new CompressionPlugin({
-          algorithm: "gzip",
+          algorithm: 'gzip',
           // cache: true,
           // threshold: 10240,
         }),
@@ -770,7 +770,7 @@ module.exports = function () {
 
       new CopyPlugin({
         patterns: [
-          { from: paths.appPublic, to: path.join(paths.appBuild, "/public") },
+          { from: paths.appPublic, to: path.join(paths.appBuild, '/public') },
           // { from: path.join(paths.appSrc,"/locales" ), to: path.join(paths.appBuild,"/public/locales" ) },
         ],
         options: {
@@ -782,9 +782,9 @@ module.exports = function () {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: "static/css/[name].[contenthash:8].css",
-          chunkFilename: "static/css/[name].[contenthash:8].chunk.css",
-          // ignoreOrder: true, // Enable to remove warnings about conflicting order
+          filename: 'static/css/[name].[contenthash:8].css',
+          chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+          ignoreOrder: true, // Enable to remove warnings about conflicting order
         }),
 
       // Generate an asset manifest file with the following content:
@@ -794,7 +794,7 @@ module.exports = function () {
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
       new WebpackManifestPlugin({
-        fileName: "asset-manifest.json",
+        fileName: 'asset-manifest.json',
         publicPath: paths.publicUrlOrPath,
         generate: (seed, files, entrypoints) => {
           const manifestFiles = files.reduce((manifest, file) => {
@@ -802,7 +802,7 @@ module.exports = function () {
             return manifest;
           }, seed);
           const entrypointFiles = entrypoints.main.filter(
-            (fileName) => !fileName.endsWith(".map"),
+            (fileName) => !fileName.endsWith('.map'),
           );
 
           return {
@@ -863,7 +863,7 @@ module.exports = function () {
         new ForkTsCheckerWebpackPlugin({
           async: isEnvDevelopment,
           typescript: {
-            typescriptPath: resolve.sync("typescript", {
+            typescriptPath: resolve.sync('typescript', {
               basedir: paths.appNodeModules,
             }),
             configOverwrite: {
@@ -883,7 +883,7 @@ module.exports = function () {
             diagnosticOptions: {
               syntactic: true,
             },
-            mode: "write-references",
+            mode: 'write-references',
             // profile: true,
           },
           issue: {
@@ -892,18 +892,18 @@ module.exports = function () {
             // '../cra-template-typescript/template/src/App.tsx'
             // otherwise.
             include: [
-              { file: "../**/src/**/*.{ts,tsx}" },
-              { file: "**/src/**/*.{ts,tsx}" },
+              { file: '../**/src/**/*.{ts,tsx}' },
+              { file: '**/src/**/*.{ts,tsx}' },
             ],
             exclude: [
-              { file: "**/src/**/__tests__/**" },
-              { file: "**/src/**/?(*.){spec|test}.*" },
-              { file: "**/src/setupProxy.*" },
-              { file: "**/src/setupTests.*" },
+              { file: '**/src/**/__tests__/**' },
+              { file: '**/src/**/?(*.){spec|test}.*' },
+              { file: '**/src/setupProxy.*' },
+              { file: '**/src/setupTests.*' },
             ],
           },
           logger: {
-            infrastructure: "silent",
+            infrastructure: 'silent',
           },
         }),
       // !disableESLintPlugin &&

@@ -1,28 +1,28 @@
-import { Outlet, Link } from "react-router-dom";
-import { CopyrightOutlined, GithubOutlined } from "@ant-design/icons";
-import { useTitle } from "ahooks";
-import { i18n } from "@lingui/core";
-import { t, Trans } from "@lingui/macro";
-import GlobalFooter from "@/components/GlobalFooter";
-import SelectLang from "@/components/SelectLang";
-import logo from "@/assets/logo.svg";
-import styles from "./UserLayout.less";
+import { Outlet, Link } from 'react-router-dom';
+import { CopyrightOutlined, GithubOutlined } from '@ant-design/icons';
+import { useTitle } from 'ahooks';
+import { i18n } from '@lingui/core';
+import { t, Trans } from '@lingui/macro';
+import GlobalFooter from '@/components/GlobalFooter';
+import SelectLang from '@/components/SelectLang';
+import logo from '@/assets/logo.svg';
+import styles from './UserLayout.less';
 
 const links = [
   {
-    key: "help",
-    title: "帮助",
-    href: "",
+    key: 'help',
+    title: '帮助',
+    href: '',
   },
   {
-    key: "privacy",
-    title: "隐私",
-    href: "",
+    key: 'privacy',
+    title: '隐私',
+    href: '',
   },
   {
-    key: "terms",
-    title: "条款",
-    href: "",
+    key: 'terms',
+    title: '条款',
+    href: '',
   },
 ];
 

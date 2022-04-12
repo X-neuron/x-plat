@@ -1,18 +1,18 @@
-import { useEffect } from "react";
-import ReactECharts from "echarts-for-react";
-import _ from "lodash";
-import { useSafeState } from "ahooks";
+import { useEffect } from 'react';
+import ReactECharts from 'echarts-for-react';
+import _ from 'lodash';
+import { useSafeState } from 'ahooks';
 
-const Dynamic = function() {
+const Dynamic = function () {
   const DEFAULT_OPTION = {
     title: {
-      text: "实时流量分析",
+      text: '实时流量分析',
     },
     tooltip: {
-      trigger: "axis",
+      trigger: 'axis',
     },
     legend: {
-      data: ["最新成交价", "预购队列"],
+      data: ['最新成交价', '预购队列'],
     },
     toolbox: {
       show: true,
@@ -38,46 +38,46 @@ const Dynamic = function() {
       min: 0,
       max: 1000,
       color: [
-        "#BE002F",
-        "#F20C00",
-        "#F00056",
-        "#FF2D51",
-        "#FF2121",
-        "#FF4C00",
-        "#FF7500",
-        "#FF8936",
-        "#FFA400",
-        "#F0C239",
-        "#FFF143",
-        "#FAFF72",
-        "#C9DD22",
-        "#AFDD22",
-        "#9ED900",
-        "#00E500",
-        "#0EB83A",
-        "#0AA344",
-        "#0C8918",
-        "#057748",
-        "#177CB0",
+        '#BE002F',
+        '#F20C00',
+        '#F00056',
+        '#FF2D51',
+        '#FF2121',
+        '#FF4C00',
+        '#FF7500',
+        '#FF8936',
+        '#FFA400',
+        '#F0C239',
+        '#FFF143',
+        '#FAFF72',
+        '#C9DD22',
+        '#AFDD22',
+        '#9ED900',
+        '#00E500',
+        '#0EB83A',
+        '#0AA344',
+        '#0C8918',
+        '#057748',
+        '#177CB0',
       ],
     },
     xAxis: [
       {
-        type: "category",
+        type: 'category',
         boundaryGap: true,
         data: (function () {
           let now = new Date();
           const res = [];
           let len = 50;
           while (len--) {
-            res.unshift(now.toLocaleTimeString().replace(/^\D*/, ""));
+            res.unshift(now.toLocaleTimeString().replace(/^\D*/, ''));
             now = new Date(now - 2000);
           }
           return res;
         })(),
       },
       {
-        type: "category",
+        type: 'category',
         boundaryGap: true,
         data: (function () {
           const res = [];
@@ -91,17 +91,17 @@ const Dynamic = function() {
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         scale: true,
-        name: "价格",
+        name: '价格',
         max: 20,
         min: 0,
         boundaryGap: [0.2, 0.2],
       },
       {
-        type: "value",
+        type: 'value',
         scale: true,
-        name: "预购量",
+        name: '预购量',
         max: 1200,
         min: 0,
         boundaryGap: [0.2, 0.2],
@@ -109,8 +109,8 @@ const Dynamic = function() {
     ],
     series: [
       {
-        name: "预购队列",
-        type: "bar",
+        name: '预购队列',
+        type: 'bar',
         xAxisIndex: 1,
         yAxisIndex: 1,
         itemStyle: {
@@ -118,11 +118,11 @@ const Dynamic = function() {
             barBorderRadius: 4,
           },
         },
-        animationEasing: "elasticOut",
-        animationDelay (idx) {
+        animationEasing: 'elasticOut',
+        animationDelay(idx) {
           return idx * 10;
         },
-        animationDelayUpdate (idx) {
+        animationDelayUpdate(idx) {
           return idx * 10;
         },
         data: (function () {
@@ -135,8 +135,8 @@ const Dynamic = function() {
         })(),
       },
       {
-        name: "最新成交价",
-        type: "line",
+        name: '最新成交价',
+        type: 'line',
         data: (function () {
           const res = [];
           let len = 0;
@@ -152,9 +152,9 @@ const Dynamic = function() {
   let count;
   const [option, setOption] = useSafeState(DEFAULT_OPTION);
   function fetchNewData() {
-    const axisData = new Date().toLocaleTimeString().replace(/^\D*/, "");
+    const axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
     const newOption = _.cloneDeep(option); // immutable
-    newOption.title.text = `实时流量分析${ new Date().getSeconds()}`;
+    newOption.title.text = `实时流量分析${new Date().getSeconds()}`;
     const data0 = newOption.series[0].data;
     const data1 = newOption.series[1].data;
     data0.shift();
@@ -174,5 +174,5 @@ const Dynamic = function() {
     return () => clearInterval(timer);
   });
   return <ReactECharts option={option} style={{ height: 400 }} />;
-}
+};
 export default Dynamic;

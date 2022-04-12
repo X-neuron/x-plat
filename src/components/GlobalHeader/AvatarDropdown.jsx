@@ -1,50 +1,32 @@
-import {
-  LogoutOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Avatar, Menu } from "antd";
-import { Trans } from "@lingui/macro";
-import { useRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom";
-import HeaderDropdown from "../HeaderDropdown";
-import styles from "./index.less";
-import { loginStateAtom } from "@/atoms/login";
-import { dynamicConfigAtom } from "@/atoms/route";
-import { accessAtom } from "@/atoms/access";
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Menu, message } from 'antd';
+import { Trans } from '@lingui/macro';
+import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { loginStateAtom } from '@/atoms/login';
+import { accessAtom } from '@/atoms/access';
+import { logout } from '@/service';
+import HeaderDropdown from '../HeaderDropdown';
+import styles from './index.less';
 
 const newConfig = [
   {
-    name: "测试1",
-    path: "/a-new-address", // 解析为/ab/a
-    component: "test1", // page 建议使用小写，内部会转换成大写,对应到组件上。权限配置中与此保持一致
-    access: "test1Open",
-  },
-  {
-    name: "测试4",
-    path: "/counter", // 解析为/c
-    component: "test4",
-    access: "test4Open",
-  },
-  {
-    name: "微前端",
-    path: "/micro",
-    icon: "PaperClipOutlined",
+    name: '微前端',
+    path: '/micro',
+    icon: 'PaperClipOutlined',
     children: [
       {
-        name: "vue2测试",
-        path: "vue2/*",
-        access: "microOpen",
-        component: "http://localhost:8001", // 微前端配置
+        name: 'vue2测试',
+        path: 'vue2/*',
+        component: 'http://192.9.209.45:8004', // 微前端配置
       },
     ],
   },
 ];
 
-const AvatarDropdown = function(props) {
+const AvatarDropdown = function (props) {
   const { menu } = props;
   const [login, setLogin] = useRecoilState(loginStateAtom);
-  const [dynamicRouteConfig, setDynamicRouteConfig] =
-    useRecoilState(dynamicConfigAtom);
   const [access, setAccess] = useRecoilState(accessAtom);
   const navigate = useNavigate();
   const handleChangeRole = () => {
@@ -56,25 +38,36 @@ const AvatarDropdown = function(props) {
       // 'example': role === 'admin',
       // 'example2': some => some.prop === 'test'
     });
-    setDynamicRouteConfig(newConfig);
+    setLogin({
+      ...login,
+      route:newConfig
+    })
     navigate(newConfig[0].path, { replace: true });
   };
 
-  const logout = () => {
-    localStorage.clear("xplat-token");
-    setLogin({
-      accessToken: false,
-    });
+  const userLogout = async () => {
+
+    const res = await logout();
+    if(res.data){
+      setLogin({
+        ...login,
+        isLogin:false
+      });
+      message.info("登出账号成功");
+    }else{
+      message.error("登出账号失败，资源冲突");
+    }
+    localStorage.removeItem('xplat-token');
   };
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]}>
       <Menu.Item key="changeRole" onClick={() => handleChangeRole()}>
         <UserOutlined />
-        <Trans>切换角色</Trans>
+        <Trans>切换角色--for测试</Trans>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout" onClick={() => logout()}>
+      <Menu.Item key="logout" onClick={() => userLogout()}>
         <LogoutOutlined />
         <Trans>退出登录</Trans>
       </Menu.Item>
@@ -87,7 +80,7 @@ const AvatarDropdown = function(props) {
         <Avatar
           size="small"
           className={styles.avatar}
-          style={{ backgroundColor: "#ffbf00", verticalAlign: "middle" }}
+          style={{ backgroundColor: '#ffbf00', verticalAlign: 'middle' }}
           alt="avatar"
         >
           {login.account}
@@ -117,6 +110,6 @@ const AvatarDropdown = function(props) {
   //     />
   //   </span>
   // );
-}
+};
 
 export default AvatarDropdown;

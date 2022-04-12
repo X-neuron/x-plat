@@ -16,30 +16,30 @@ import {
   PieChartOutlined,
   PaperClipOutlined,
   BarsOutlined,
-} from "@ant-design/icons";
-import _ from "lodash";
-import memoized from "nano-memoize";
-import { isUrl } from "@/utils/is";
+} from '@ant-design/icons';
+import _ from 'lodash';
+import memoized from 'nano-memoize';
+import { isUrl } from '@/utils/is';
 // 需要 引入 react jsx parser么？ 好像有点大。就这几个图标，还是 用函数代替吧。
 
 const icons = new Map([
-  ["HomeOutlined", <HomeOutlined />],
-  ["AppstoreOutlined", <AppstoreOutlined />],
-  ["FormOutlined", <FormOutlined />],
-  ["PieChartOutlined", <PieChartOutlined />],
-  ["PaperClipOutlined", <PaperClipOutlined />],
-  ["BarsOutlined", <BarsOutlined />],
-  ["UserOutlined", <UserOutlined />],
-  ["IssuesCloseOutlined", <IssuesCloseOutlined />],
-  ["SecurityScanOutlined", <SecurityScanOutlined />],
-  ["ProjectOutlined", <ProjectOutlined />],
-  ["SettingOutlined", <SettingOutlined />],
-  ["BlockOutlined", <BlockOutlined />],
-  ["TrademarkCircleOutlined", <TrademarkCircleOutlined />],
-  ["PartitionOutlined", <PartitionOutlined />],
-  ["ControlOutlined", <ControlOutlined />],
-  ["AuditOutlined", <AuditOutlined />],
-  ["InsuranceOutlined", <InsuranceOutlined />],
+  ['HomeOutlined', <HomeOutlined />],
+  ['AppstoreOutlined', <AppstoreOutlined />],
+  ['FormOutlined', <FormOutlined />],
+  ['PieChartOutlined', <PieChartOutlined />],
+  ['PaperClipOutlined', <PaperClipOutlined />],
+  ['BarsOutlined', <BarsOutlined />],
+  ['UserOutlined', <UserOutlined />],
+  ['IssuesCloseOutlined', <IssuesCloseOutlined />],
+  ['SecurityScanOutlined', <SecurityScanOutlined />],
+  ['ProjectOutlined', <ProjectOutlined />],
+  ['SettingOutlined', <SettingOutlined />],
+  ['BlockOutlined', <BlockOutlined />],
+  ['TrademarkCircleOutlined', <TrademarkCircleOutlined />],
+  ['PartitionOutlined', <PartitionOutlined />],
+  ['ControlOutlined', <ControlOutlined />],
+  ['AuditOutlined', <AuditOutlined />],
+  ['InsuranceOutlined', <InsuranceOutlined />],
   // ['Default',<Default />] //default microapp
 ]);
 

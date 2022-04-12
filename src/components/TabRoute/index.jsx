@@ -1,9 +1,9 @@
-import { useRef, Suspense } from "react";
-import { Tabs } from "antd";
+import { useRef, Suspense } from 'react';
+import { Tabs } from 'antd';
 // import Lru from "@/utils/lru";
-import memoized from "nano-memoize";
-import _ from "lodash";
-import { useMemoizedFn, useCreation } from "ahooks";
+import memoized from 'nano-memoize';
+import _ from 'lodash';
+import { useMemoizedFn, useCreation } from 'ahooks';
 // import { useWhyDidYouUpdate } from 'ahooks';
 
 import {
@@ -12,12 +12,12 @@ import {
   useLocation,
   generatePath,
   useParams,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 // import { useRecoilState} from 'recoil';
 
-import { i18n } from "@lingui/core";
-import PageLoading from "@/components/PageLoading";
+import { i18n } from '@lingui/core';
+import PageLoading from '@/components/PageLoading';
 
 const { TabPane } = Tabs;
 
@@ -31,7 +31,7 @@ const generTabKey = memoized(
 
 // 从key中返回 ,号后面的字符
 const getTabMapKey = memoized((key) =>
-  key.substring(key.indexOf(",") + 1, key.length),
+  key.substring(key.indexOf(',') + 1, key.length),
 );
 
 const TabRoute = function (props) {
@@ -110,7 +110,7 @@ const TabRoute = function (props) {
       activeKey={generTabKey(location, matchPath)}
       onChange={(key) => selectTab(key)}
       // tabBarExtraContent={operations}
-      tabBarStyle={{ background: "#fff" }}
+      tabBarStyle={{ background: '#fff' }}
       tabPosition="top"
       animated
       tabBarGutter={-1}

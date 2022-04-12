@@ -1,13 +1,13 @@
-import { Steps, Button, Space } from "antd";
-import ProCard from "@ant-design/pro-card";
-import { useRecoilValue } from "recoil";
-import { Suspense } from "react";
-import { projectSubFlowAtom, projectSubStepAtom } from "../atoms";
-import StepDetailForm from "./StepDetailForm";
-import PageLoading from "@/components/PageLoading";
+import { Steps, Button, Space } from 'antd';
+import ProCard from '@ant-design/pro-card';
+import { useRecoilValue } from 'recoil';
+import { Suspense } from 'react';
+import { projectSubFlowAtom, projectSubStepAtom } from '../atoms';
+import StepDetailForm from './StepDetailForm';
+import PageLoading from '@/components/PageLoading';
 
 const { Step } = Steps;
-const StepCard = function(props) {
+const StepCard = function (props) {
   const curProjectSubFlow = useRecoilValue(projectSubFlowAtom);
   const curSubStep = useRecoilValue(projectSubStepAtom);
   const { record } = props;
@@ -35,6 +35,6 @@ const StepCard = function(props) {
       </ProCard>
     </ProCard>
   );
-}
+};
 
 export default StepCard;

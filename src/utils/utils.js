@@ -1,4 +1,5 @@
 import { parse } from "querystring";
+import _ from "lodash";
 // import { pathRegexp } from 'path-to-regexp';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
@@ -113,4 +114,142 @@ export function saveFilefromBlob(filename, blob) {
     window.URL.revokeObjectURL(blobUrl);
     link = null;
   }, 0);
+}
+
+// 以下两个用来操作tree checked key的 array数据转化成tree需要的数据类型..
+export const transToAntdTreeData = (tree) => {
+  const toAntdTrees = (array) =>
+    array?.map((item) => {
+      const returnValue = {
+        ...item,
+        id: item.id,
+        key: item.id,
+        value: item.id,
+        title: item.name,
+        isLeaf: item.children.length === 0,
+        // disableCheckbox:item.children.length === 0 ? true:false,
+        // selectable: item.children.length !== 0? true:false //叶子节点不可选，子步骤不会修改
+      };
+      if (item.children.length !== 0) {
+        returnValue.children = toAntdTrees(item.children);
+      }
+      return returnValue;
+    });
+  const ret = toAntdTrees(tree);
+  return ret;
+};
+
+export const filterTreesFromSelectedKey = (tree, keys) => {
+  const cloneTree = _.cloneDeep(tree);
+  const filterTree = (data) => {
+    if (!data) return;
+    const newData = data?.filter((item) => {
+      if (item?.children?.length !== 0) {
+        item.children = filterTree(item.children);
+      }
+      return keys.find((key) => key === item.id);
+    });
+    return newData;
+  };
+  return filterTree(cloneTree);
+};
+
+
+// export const transToAntdTreeNodeData = (array) => array?.map((item) => ({
+//   ...item,
+//   id: item.id,
+//   key: item.id,
+//   value: item.id,
+//   title: item.name,
+//   isLeaf: false,
+//   // disableCheckbox:item.children.length === 0 ? true:false,
+//   selectable: false // 叶子节点不可选，子步骤不会修改
+// }));
+
+
+export const transToAntdTreeLeafData = (tree,pid) => {
+  if(tree.length === 0){ return []}
+  // if(tree){
+  const toAntdTrees = (array) =>
+    array?.map((item) => {
+      const returnValue = {
+        // ...item,
+        id: item.id,
+        key: item.id,
+        value: item.id,
+        pid,
+        title: item.name ?? item.nickName,
+        name: item.name ?? item.nickName,
+        isLeaf: true,
+        selectable:true,
+
+        // disableCheckbox:item.children.length === 0 ? true:false,
+        // selectable: item.children.length !== 0? true:false //叶子节点不可选，子步骤不会修改
+      };
+      if (item.children?.length !== 0) {
+        returnValue.children = toAntdTrees(item.children,item.id);
+      }
+      return returnValue;
+    });
+  const ret = toAntdTrees(tree);
+  return ret;
+};
+
+
+export const transToAntdTreeNodeData = (tree,pid) => {
+  // console.log('transToAntdTreeNodeData start');
+  if(tree.length === 0){ return []}
+  const toAntdTrees = (array) =>
+    array?.map((item) => {
+      const returnValue = {
+        // ...item,
+        id: item.id,
+        key: item.id,
+        pid,
+        name:item.name,
+        value: item.id,
+        title: item.name,
+        isLeaf: false,
+        selectable: false // 叶子节点不可选，子步骤不会修改
+      };
+      if (item.children?.length !== 0) {
+        returnValue.children = toAntdTrees(item.children,item.id);
+      }
+      return returnValue;
+    });
+  const ret = toAntdTrees(tree);
+  return ret;
+}
+
+
+export const transPermissionToRoute = (route) => {
+  // console.log("data",data);
+
+  const newRoute = [];
+  const transObjectName = (curRoute) => {
+    const newCurRoute = {
+      path:curRoute.route,
+      icon:curRoute.icon,
+      name:curRoute.name
+    };
+    if(curRoute.component){
+      newCurRoute.component = curRoute.component;
+    }
+    if(curRoute.route === "/" && curRoute.component){
+      newCurRoute.index = true;
+    }
+    if (curRoute.children?.length !== 0) {
+      const newChildren = [];
+      curRoute.children.forEach((item) => {
+        newChildren.push(transObjectName(item));
+      });
+      newCurRoute.children = newChildren;
+    }
+    console.log(newCurRoute);
+    return newCurRoute;
+  };
+  route.forEach((item) => {
+    newRoute.push(transObjectName(item));
+  });
+  return newRoute;
 }

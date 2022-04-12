@@ -1,10 +1,12 @@
 import { useRef } from "react";
 import ProTable from "@ant-design/pro-table";
 import { Button, Space, message } from "antd";
-import { useCreation, useMemoizedFn, useSafeState, useUpdate } from "ahooks";
+import { useCreation, useMemoizedFn, useSafeState, useMount } from "ahooks";
 import _ from "lodash";
+// import { getOrganizationRootChildrenTreeByName, getCategoryDescendantByName, getAsyncOrganizationTreeById } from "@/service";
+import paramConfig from "@/config/params";
 import { getCategoriesByParentId, deleteCategory } from "./service";
-import CreateCategoryModal from "./components/CreateCategoryModal";
+import CategoryModal from "./components/CategoryModal";
 
 const handleDeleteCategory = async (record) => {
   const res = await deleteCategory(record.id);
@@ -17,6 +19,25 @@ const handleDeleteCategory = async (record) => {
   }
   return true;
 };
+
+const injectChildren = (tree, id, children) => {
+  let findDone = false;
+  const findAndInsert = (data) => {
+    if (!findDone) {
+      data.forEach((item) => {
+        if (item.id === id) {
+          item.children = children;
+          findDone = true;
+        } else if (item?.children) {
+          findAndInsert(item.children);
+        }
+      });
+    }
+  };
+  findAndInsert(tree);
+  return [...tree];
+};
+
 
 const ResTypeColumns = [
   // {
@@ -58,14 +79,14 @@ const ResTypeColumns = [
     // fibernode record index table
     render: (_, record, index) => (
       <Space size="small">
-        <CreateCategoryModal
+        <CategoryModal
           record={record}
           title="新增子类别"
           order={index}
           act="new"
           sort={record?.children ? record?.children?.length + 1 : 1}
         />
-        <CreateCategoryModal
+        <CategoryModal
           record={record}
           title="修改"
           order={index}
@@ -116,28 +137,12 @@ const ResTypeColumns = [
   },
 ];
 
-const injectChildren = (tree, id, children) => {
-  let findDone = false;
-  const findAndInsert = (data) => {
-    if (!findDone) {
-      data.forEach((item) => {
-        if (item.id === id) {
-          item.children = children;
-          findDone = true;
-        } else if (item?.children) {
-          findAndInsert(item.children);
-        }
-      });
-    }
-  };
-  findAndInsert(tree);
-  return [...tree];
-};
 
-const CategoryManager = function() {
+const CategoryManager = function () {
   // const treeData = useRef([]);
   // const expandedRowKey = useRef(new Map());
   const [treeData, setTreeData] = useSafeState([]);
+
   // const update = useUpdate();
   // const categoryTable = useRef();
 
@@ -147,12 +152,14 @@ const CategoryManager = function() {
     // if (expanded && !expandedRowKey.current.get(record.id)) {
     if (expanded) {
       const res = await getCategoriesByParentId(record?.id);
-      const transData = res.data.map((item) => item.hasSub
-        ? {
-          ...item,
-          children: [],
-        }
-        : item);
+      const transData = res.data.map((item) =>
+        item.hasSub
+          ? {
+            ...item,
+            children: [],
+          }
+          : item,
+      );
       // injectChildren(treeData.current, record?.id, transData);
       setTreeData(injectChildren(treeData, record?.id, transData));
       // expandedRowKey.current.set(record.id, true);
@@ -161,6 +168,7 @@ const CategoryManager = function() {
       // console.log([...curExpandedRowKey,record.id]);
     }
   };
+
 
   return (
     <ProTable
@@ -178,12 +186,14 @@ const CategoryManager = function() {
         //     : item;
         // });
         setTreeData(
-          res.data.map((item) => item.hasSub
-            ? {
-              ...item,
-              children: [],
-            }
-            : item),
+          res.data.map((item) =>
+            item.hasSub
+              ? {
+                ...item,
+                children: [],
+              }
+              : item,
+          ),
         );
         // update();
       }}
@@ -193,9 +203,9 @@ const CategoryManager = function() {
       bordered
       rowKey="id"
       pagination={false}
-      toolBarRender={() => [<CreateCategoryModal act="new" />]}
+      toolBarRender={() => [<CategoryModal act="new"/>]}
     ></ProTable>
   );
-}
+};
 
 export default CategoryManager;

@@ -1,18 +1,18 @@
 /* eslint-disable no-lonely-if */
 
-import { resolvePath } from "react-router-dom";
-import _ from "lodash";
-import { i18n } from "@lingui/core";
-import getPage from "@/config/pages";
-import getIcon from "@/config/icons";
-import routeConfig from "@/config/routes";
+import { resolvePath } from 'react-router-dom';
+import _ from 'lodash';
+import { i18n } from '@lingui/core';
+import getPage from '@/config/pages';
+import getIcon from '@/config/icons';
+import routeConfig from '@/config/routes';
 // import { t } from "@lingui/macro";
 // 单独 拉出config 因为 修改route的时候，是按"@/config/routes"的格式提供的。
 // 而后端不可能提供key，resolvepath之类的参数。
 // staticConfig 以 menutabs 为标志。
 
 const normalizePathname = (pathname) =>
-  pathname.replace(/\/+$/, "").replace(/^\/*/, "/");
+  pathname.replace(/\/+$/, '').replace(/^\/*/, '/');
 
 const extractConfig = extractRouteConfig(routeConfig);
 export const staticConfig = extractConfig.staticConf;
@@ -113,7 +113,7 @@ function generateProlayoutMenuDataItem(menuTabs, basePath) {
     // fullPath 可去掉*号，以免引起url路径错误
     // /*的配置只会在路由  路径的末尾...
     const resPath = resolvePath(
-      conf.path ? _.replace(conf.path, "/*", "") : "/*",
+      conf.path ? _.replace(conf.path, '/*', '') : '/*',
       normalizePathname(basePath),
     );
 
@@ -131,7 +131,7 @@ function generateProlayoutMenuDataItem(menuTabs, basePath) {
       icon: getIcon(conf.icon),
       element: conf.component
         ? getPage(conf.component, conf.access, resPath.pathname)
-        : getPage("Default"),
+        : getPage('Default'),
       access: conf.access,
     };
     // 支持prolayout路由
@@ -179,7 +179,7 @@ export function generateRouteAndProlayoutMenus(staticConf, dynamicConf) {
 
       // const resPath = resolvePath(_.replace(conf.path,'/*',''),normalizePathname(basePath));
       const resPath = resolvePath(
-        conf.path ? _.replace(conf.path, "/*", "") : "/*",
+        conf.path ? _.replace(conf.path, '/*', '') : '/*',
         normalizePathname(basePath),
       );
 
@@ -196,7 +196,7 @@ export function generateRouteAndProlayoutMenus(staticConf, dynamicConf) {
         // element: conf.component,
         element: conf.component
           ? getPage(conf.component, conf.access, resPath.pathname)
-          : getPage("Default"),
+          : getPage('Default'),
         // authority: conf.authority,
         name: conf.name ? conf.name : conf.component,
         access: conf.access,
@@ -222,13 +222,14 @@ export function generateRouteAndProlayoutMenus(staticConf, dynamicConf) {
       return route;
     });
 
-  const staticRoute = generateRmtConfig(staticConf, "/");
+  const staticRoute = generateRmtConfig(staticConf, '/');
+  console.log({ staticRoute, menuTabs });
   return { staticRoute, menuTabs };
 }
 
 // 路由拆分成了两部分，要把可变的部分 合并到新的整体中,并返回新的路由，配合react-router6的使用
 // 以routeA 为基准，将routeB，拷贝至routeA里的object.menutabs=true标记的对象children属性下。使其成为一个可用的appRoute整体
-export const mergeRoute = (routeA, routeB, flag = "menuTabs") => {
+export const mergeRoute = (routeA, routeB, flag = 'menuTabs') => {
   const newRoute = _.cloneDeep(routeA);
   const replaceFlagePropertyByChilren = (array) => {
     array.forEach((element) => {

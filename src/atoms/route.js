@@ -1,12 +1,12 @@
 import { atom, selector } from "recoil";
 import {
   staticConfig,
-  dynamicConfig,
   generateRouteAndProlayoutMenus,
   mergeRoute,
   translateNameProperty,
 } from "@/utils/route-utils";
 import { curLocaleLoadAtom } from "@/atoms/locale";
+import { loginStateAtom } from "./login";
 // import { i18n } from "@lingui/core";
 // import memoized from "nano-memoize";
 
@@ -20,10 +20,15 @@ export const staticConfigAtom = atom({
   default: staticConfig,
 });
 
-export const dynamicConfigAtom = atom({
+export const dynamicConfigAtom = selector({
   key: "dynamicConfigAtom",
-  default: dynamicConfig,
+  get: ({ get }) => get(loginStateAtom).route
 });
+
+// export const dynamicConfigAtom = atom({
+//   key: 'dynamicConfigAtom',
+//   default: dynamicConfig,
+// });
 
 const rmtConfigAtom = selector({
   key: "rmtConfigAtom",
@@ -43,6 +48,8 @@ export const dynamicRouteAtom = selector({
   key: "dynamicRouteAtom",
   get: ({ get }) => get(rmtConfigAtom).menuTabs,
 });
+
+
 // 翻译name，方便后续使用
 export const transDynamicRouteAtom = selector({
   key: "transDynamicRouteAtom",

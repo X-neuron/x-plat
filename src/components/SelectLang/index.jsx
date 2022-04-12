@@ -1,8 +1,8 @@
-import { Menu, Dropdown } from "antd";
-import { ClickParam } from "antd/es/menu";
-import { DropDownProps } from "antd/es/dropdown";
-import { useRecoilState } from "recoil";
-import { locales, curLangAtom } from "@/atoms/locale";
+import { Menu, Dropdown } from 'antd';
+import { ClickParam } from 'antd/es/menu';
+import { DropDownProps } from 'antd/es/dropdown';
+import { useRecoilState } from 'recoil';
+import { locales, curLangAtom } from '@/atoms/locale';
 
 const HeaderDropdown = function ({ overlayClassName: cls, ...restProps }) {
   return <Dropdown overlayClassName={cls} {...restProps} />;
@@ -27,16 +27,16 @@ const SelectLang = function (props) {
   const [curLang, setCurLang] = useRecoilState(curLangAtom);
 
   const inlineStyle = {
-    cursor: "pointer",
-    padding: "12px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
+    cursor: 'pointer',
+    padding: '12px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: 18,
-    verticalAlign: "middle",
+    verticalAlign: 'middle',
   };
 
-  const menuItemStyle = { minWidth: "160px" };
+  const menuItemStyle = { minWidth: '160px' };
 
   const handleClick = ({ key }) => {
     if (key !== curLang) {
@@ -49,7 +49,7 @@ const SelectLang = function (props) {
       {Object.keys(locales).map((lang) => (
         <Menu.Item key={lang} style={menuItemStyle}>
           <span role="img" aria-label={locales[lang].name}>
-            {locales[lang].icon || "🌐"}
+            {locales[lang].icon || '🌐'}
           </span>
           {locales[lang].name}
         </Menu.Item>

@@ -1,21 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 // import ProTable from '@ant-design/pro-table';
-import { EditableProTable } from "@ant-design/pro-table";
-import { Button, Space, Popconfirm, message, Upload } from "antd";
-import { useRecoilValue } from "recoil";
-import { useSafeState } from "ahooks";
-import MySwitch from "./MySwitch";
+import { EditableProTable } from '@ant-design/pro-table';
+import { Button, Space, Popconfirm, message, Upload } from 'antd';
+import { useRecoilValue } from 'recoil';
+import { useSafeState } from 'ahooks';
+import MySwitch from './MySwitch';
 import {
   getProjectFiles,
   deleteProjectFile,
   getProjectFileUrl,
   updateProjectFileMess,
   createProjectFileMess,
-} from "../service";
-import { projectRecordAtom, codeIndexAtom, fileFeatureAtom } from "../atoms";
-import { loginStateAtom } from "@/atoms/login";
+} from '../service';
+import { projectRecordAtom, codeIndexAtom, fileFeatureAtom } from '../atoms';
+import { loginStateAtom } from '@/atoms/login';
 // import { downloadFile } from '@/utils/utils'
-import paramConfig from "@/config/params";
+import paramConfig from '@/config/params';
 
 const downLoadFile = async (record) => {
   const res = await getProjectFileUrl(record.projects[0]?.id, record.id);
@@ -34,13 +34,13 @@ const deleteFile = async (record) => {
     message.info(res.message);
     return false;
   }
-  message.info("删除成功！");
+  message.info('删除成功！');
   return true;
 
   // if(res.)
 };
 
-const BrowseFilesTable = function(props) {
+const BrowseFilesTable = function (props) {
   const fileTreeTable = useRef();
   const selectProject = useRecoilValue(projectRecordAtom);
   const codeIndex = useRecoilValue(codeIndexAtom);
@@ -49,31 +49,31 @@ const BrowseFilesTable = function(props) {
 
   const columns = [
     {
-      title: "文件名",
+      title: '文件名',
       copyable: true,
-      dataIndex: "name",
-      align: "right",
+      dataIndex: 'name',
+      align: 'right',
       // editable:false,
-      key: "name",
+      key: 'name',
       formItemProps: (form, { rowIndex }) => ({
         rules:
-            rowIndex > 2 ? [{ required: true, message: "此项为必填项" }] : [],
+          rowIndex > 2 ? [{ required: true, message: '此项为必填项' }] : [],
       }),
     },
     {
-      title: "类型",
+      title: '类型',
       width: 60,
-      dataIndex: "type",
-      align: "right",
+      dataIndex: 'type',
+      align: 'right',
       editable: false,
-      key: "type",
+      key: 'type',
     },
     {
-      title: "纸质版",
-      dataIndex: "hasPaper",
+      title: '纸质版',
+      dataIndex: 'hasPaper',
       width: 70,
-      align: "center",
-      key: "hasPaper",
+      align: 'center',
+      key: 'hasPaper',
       editable: false,
       // valueType: 'select',
       // valueEnum:{
@@ -90,11 +90,11 @@ const BrowseFilesTable = function(props) {
       ),
     },
     {
-      title: "电子版",
-      dataIndex: "hasElectronic",
+      title: '电子版',
+      dataIndex: 'hasElectronic',
       width: 70,
-      align: "center",
-      key: "hasElectronic",
+      align: 'center',
+      key: 'hasElectronic',
       editable: false,
       // valueType: 'select',
       // valueEnum:{
@@ -111,26 +111,26 @@ const BrowseFilesTable = function(props) {
       ),
     },
     {
-      title: "数量",
-      dataIndex: "paperNumber",
+      title: '数量',
+      dataIndex: 'paperNumber',
       width: 80,
-      key: "paperNumber",
-      valueType: "digit",
+      key: 'paperNumber',
+      valueType: 'digit',
     },
     {
-      title: "创建时间",
+      title: '创建时间',
       width: 120,
-      dataIndex: "issueDate",
-      key: "issueDate",
-      valueType: "date",
+      dataIndex: 'issueDate',
+      key: 'issueDate',
+      valueType: 'date',
     },
     {
-      title: "大小",
+      title: '大小',
       width: 80,
-      dataIndex: "size",
-      align: "right",
+      dataIndex: 'size',
+      align: 'right',
       editable: false,
-      key: "size",
+      key: 'size',
     },
 
     // {
@@ -165,8 +165,8 @@ const BrowseFilesTable = function(props) {
     //   },
     // },
     {
-      title: "操作",
-      valueType: "option",
+      title: '操作',
+      valueType: 'option',
       // width: 150,
       render: (text, record, _, action) => [
         <a
@@ -202,7 +202,7 @@ const BrowseFilesTable = function(props) {
           ) : (
             <Upload
               headers={{
-                authorization: `Bearer ${localStorage.getItem("xplat-token")}`,
+                authorization: `Bearer ${localStorage.getItem('xplat-token')}`,
               }}
               action={`${paramConfig.requestBaseUrl}/file/${record.id}`}
               // data={{
@@ -229,7 +229,7 @@ const BrowseFilesTable = function(props) {
   const [dataSource, setDataSource] = useSafeState([]);
   // const [treeData,setTreeData] = useSafeState();
   useEffect(async () => {
-    console.log("filetreetable is:", fileTreeTable.current);
+    console.log('filetreetable is:', fileTreeTable.current);
     fileTreeTable.current.reload();
   }, [selectProject, codeIndex]);
   return (
@@ -252,7 +252,7 @@ const BrowseFilesTable = function(props) {
       value={dataSource}
       onChange={setDataSource}
       pagination={{
-        pageSize: 10,
+        pageSize: 20,
         show: true,
       }}
       search={false}
@@ -267,11 +267,11 @@ const BrowseFilesTable = function(props) {
       // }}
       rowKey="id"
       editable={{
-        type: "multiple",
+        type: 'multiple',
         editableKeys,
         onSave: async (rowKey, record, row) => {
           console.log(
-            "edit table is:,selectproject is",
+            'edit table is:,selectproject is',
             rowKey,
             record,
             row,
@@ -288,7 +288,7 @@ const BrowseFilesTable = function(props) {
               },
             );
             if (res.data) {
-              message.info("修改成功");
+              message.info('修改成功');
             }
           } else {
             const res = await createProjectFileMess(selectProject.id, {
@@ -302,7 +302,7 @@ const BrowseFilesTable = function(props) {
               issueDate: record.issueDate,
             });
             if (res.data) {
-              message.info("修改成功");
+              message.info('修改成功');
               fileTreeTable.current.reload();
             }
           }
@@ -322,6 +322,6 @@ const BrowseFilesTable = function(props) {
       ]}
     />
   );
-}
+};
 
 export default BrowseFilesTable;

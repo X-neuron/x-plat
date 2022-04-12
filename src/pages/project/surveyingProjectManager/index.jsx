@@ -1,10 +1,10 @@
-import { Suspense } from "react";
-import ProCard from "@ant-design/pro-card";
-import PageLoading from "@/components/PageLoading";
-import ProjectTable from "./components/ProjectTable";
-import ProjectProgressForm from "./components/ProjectProgressForm";
+import { Suspense } from 'react';
+import ProCard from '@ant-design/pro-card';
+import PageLoading from '@/components/PageLoading';
+import ProjectTable from './components/ProjectTable';
+import ProjectProgressForm from './components/ProjectProgressForm';
 
-const SurveyingProjectManager = function() {
+const SurveyingProjectManager = function () {
   return (
     // split="vertical"  split="horizontal"
     <ProCard split="vertical">
@@ -25,6 +25,6 @@ const SurveyingProjectManager = function() {
       {/* </ProCard> */}
     </ProCard>
   );
-}
+};
 
 export default SurveyingProjectManager;

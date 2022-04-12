@@ -1,34 +1,34 @@
-import { useRef } from "react";
-import ProTable from "@ant-design/pro-table";
-import { Button, Space, Progress } from "antd";
-import { useSafeState } from "ahooks";
-import { useRecoilState } from "recoil";
-import dayjs from "dayjs";
-import { getProjects } from "../service";
-import CreateSurveryingProjectModal from "./CreateSurveryingProjectModal";
-import UpdateSurveryingProjectModal from "./UpdateSurveryingProjectModal";
-import ProjectCostDrawerForm from "./ProjectCostDrawerForm";
-import ProjectFileModal from "./ProjectFileModal";
-import { projectRecordAtom, browseModeAtom } from "../atoms";
+import {  useRef } from 'react';
+import ProTable from '@ant-design/pro-table';
+import { Button, Space, Progress } from 'antd';
+import { useSafeState } from 'ahooks';
+import { useRecoilState } from 'recoil';
+import dayjs from 'dayjs';
+import { getProjects } from '../service';
+import CreateSurveryingProjectModal from './CreateSurveryingProjectModal';
+import UpdateSurveryingProjectModal from './UpdateSurveryingProjectModal';
+import ProjectCostDrawerForm from './ProjectCostDrawerForm';
+import ProjectFileModal from './ProjectFileModal';
+import { projectRecordAtom, browseModeAtom } from '../atoms';
 
 const columns = [
   {
-    title: "项目来源",
-    dataIndex: "orginateFrom",
-    align: "right",
-    key: "orginateFrom",
+    title: '项目来源',
+    dataIndex: 'orginateFrom',
+    align: 'right',
+    key: 'orginateFrom',
   },
   {
-    title: "项目名称",
-    dataIndex: "name",
-    align: "right",
-    key: "name",
+    title: '项目名称',
+    dataIndex: 'name',
+    align: 'right',
+    key: 'name',
   },
   {
-    title: "负责人",
-    dataIndex: "charger",
-    align: "right",
-    key: "charger",
+    title: '负责人',
+    dataIndex: 'charger',
+    align: 'right',
+    key: 'charger',
   },
   // {
   //   title: '创建时间',
@@ -43,11 +43,11 @@ const columns = [
   //   key: 'finishDate',
   // },
   {
-    title: "整体进度",
-    dataIndex: "progress",
-    align: "right",
-    key: "progress",
-    valueType: "option",
+    title: '整体进度',
+    dataIndex: 'progress',
+    align: 'right',
+    key: 'progress',
+    valueType: 'option',
     render: (_, record) => <Progress percent={record.progress} size="small" />,
   },
   // {
@@ -57,17 +57,17 @@ const columns = [
   //   align: 'center',
   // },
   {
-    title: "操作",
-    key: "operation",
-    align: "right",
-    fixed: "left",
-    valueType: "option",
+    title: '操作',
+    key: 'operation',
+    align: 'right',
+    fixed: 'left',
+    valueType: 'option',
     // 当前行的值，当前行数据，行索引
     render: (_, record) => (
       <Space size="small">
         {/* <Button onClick={() => modifyRow(record)}>修改</Button> */}
-        <UpdateSurveryingProjectModal record={record} />
         {/* <CreateSurveryingProjectModal record={record} title={'新建子项目'} /> */}
+        <UpdateSurveryingProjectModal record={record} />
         <ProjectCostDrawerForm record={record} title="经费" />
         <ProjectFileModal record={record} title="文件" />
       </Space>
@@ -75,7 +75,7 @@ const columns = [
   },
 ];
 
-const ProjectTable = function(props) {
+const ProjectTable = function (props) {
   const [selectProject, setSelectProject] = useRecoilState(projectRecordAtom);
   const [curExpandedRowKey, setCurExpandedRow] = useSafeState([]);
   const [subProjectData, setSubProjectData] = useSafeState();
@@ -111,7 +111,7 @@ const ProjectTable = function(props) {
         });
       }}
       rowSelection={{
-        type: "radio",
+        type: 'radio',
         preserveSelectedRowKeys: true,
         onChange: (key, rec) => {
           // onSelect:(rec,key) => {
@@ -169,12 +169,12 @@ const ProjectTable = function(props) {
         collapseRender: true,
         // labelWidth: 80,
         // filterType:"light",
-        layout: "horizontal",
+        layout: 'horizontal',
       }}
       onExpand={handerExpand}
       toolBarRender={() => [<CreateSurveryingProjectModal />]}
     />
   );
-}
+};
 
 export default ProjectTable;

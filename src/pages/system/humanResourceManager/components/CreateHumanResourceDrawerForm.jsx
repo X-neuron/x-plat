@@ -13,7 +13,7 @@ import ProForm, {
 import { PlusOutlined } from "@ant-design/icons";
 import { createHumanResources, updateHumanResources } from "../service";
 
-const CreateHumanResourceDrawerForm = function(props) {
+const CreateHumanResourceDrawerForm = function (props) {
   const { record, title, act } = props;
   return (
     <DrawerForm
@@ -302,6 +302,6 @@ const CreateHumanResourceDrawerForm = function(props) {
       </ProFormList>
     </DrawerForm>
   );
-}
+};
 
 export default CreateHumanResourceDrawerForm;

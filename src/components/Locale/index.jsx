@@ -1,11 +1,11 @@
 // import { Suspense } from "react";
-import { i18n } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
+import { i18n } from '@lingui/core';
+import { I18nProvider } from '@lingui/react';
 // import PageLoading from "@/components/PageLoading";
-import { useMount } from "ahooks";
-import { ConfigProvider } from "antd";
-import { useRecoilValue } from "recoil";
-import { antdLocaleAtom, curLocaleLoadAtom } from "@/atoms/locale";
+import { useMount } from 'ahooks';
+import { ConfigProvider } from 'antd';
+import { useRecoilValue } from 'recoil';
+import { antdLocaleAtom, curLocaleLoadAtom } from '@/atoms/locale';
 
 // import zh from "@/locales/zh-CN"; // 默认加载中文。 lingui-detect尚不稳定
 

@@ -1,8 +1,8 @@
-import { useSafeState } from "ahooks";
-import { Switch } from "antd";
-import { updateProjectFileMess } from "../service";
+import { useSafeState } from 'ahooks';
+import { Switch } from 'antd';
+import { updateProjectFileMess } from '../service';
 
-const MySwitch = function(props) {
+const MySwitch = function (props) {
   const { record, valueKey } = props;
   const [check, setCheck] = useSafeState();
 
@@ -13,7 +13,7 @@ const MySwitch = function(props) {
     if (res.data) {
       setCheck(e);
     } else {
-      message.info("服务器响应失败！");
+      message.info('服务器响应失败！');
     }
   };
 
@@ -25,6 +25,6 @@ const MySwitch = function(props) {
       checked={check}
     />
   );
-}
+};
 
 export default MySwitch;

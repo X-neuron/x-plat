@@ -1,5 +1,5 @@
-import classNames from "classnames";
-import styles from "./index.less";
+import classNames from 'classnames';
+import styles from './index.less';
 
 export default function ({ className, links, copyRight }) {
   const clsString = classNames(styles.globalFooter, className);
@@ -10,7 +10,7 @@ export default function ({ className, links, copyRight }) {
           {links.map((link) => (
             <a
               key={link.key}
-              target={link.blankTarget ? "_blank" : "_self"}
+              target={link.blankTarget ? '_blank' : '_self'}
               href={link.href}
               rel="noreferrer"
             >
