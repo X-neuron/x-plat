@@ -12,7 +12,7 @@
 - **微前端:** 使用 qiankun 实现微前端架构
 - **按钮级权限:** 开箱即用的前端权限模板..
 
-<img src="https://i.postimg.cc/7YxFXC5H/image.gif" >
+<img src="https://i.postimg.cc/HkRvcrmY/image.gif" >
 
 ## 安装使用
 
