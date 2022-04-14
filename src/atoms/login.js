@@ -67,7 +67,7 @@ export const loginStateAtom = atom({
             icon: "ProjectOutlined",
             children: [
               {
-                name: "科研项目管理",
+                name: "XXX项目管理",
                 path: "surveyingProjectManager",
                 component: "surveyingProjectManager",
                 // access: "surveyingProjectManagerEnable",

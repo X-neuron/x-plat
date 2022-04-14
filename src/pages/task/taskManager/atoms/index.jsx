@@ -138,7 +138,7 @@ export const taskStepDetailAtom = selector({
   },
 });
 
-// `科研项目管理/${record.orginateFrom}/${record.name}/${majorFlows[curMainStep].name}/${subFlows[curSubStep].name}`
+// `XXX项目管理/${record.orginateFrom}/${record.name}/${majorFlows[curMainStep].name}/${subFlows[curSubStep].name}`
 export const taskFileFeatureAtom = selector({
   key: "taskFileFeatureAtom",
   get: async ({ get }) => {

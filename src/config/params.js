@@ -4,7 +4,7 @@ const paramConfig = {
   domainCategory: "领域分类",
   projectFlow: "项目管理流程",
   orgRootNode: "中国某单位",
-  translateTaskFlow: "翻译流程管理",
+  translateTaskFlow: "XX流程管理",
   categoryUnit: "计量单位",
   requestBaseUrl: "http://localhost:8000/api/v1",
   host: "http://localhost",

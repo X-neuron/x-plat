@@ -139,7 +139,7 @@ export const projectStepDetailAtom = selector({
   },
 });
 
-// `科研项目管理/${record.orginateFrom}/${record.name}/${majorFlows[curMainStep].name}/${subFlows[curSubStep].name}`
+// `XXX项目管理/${record.orginateFrom}/${record.name}/${majorFlows[curMainStep].name}/${subFlows[curSubStep].name}`
 export const fileFeatureAtom = selector({
   key: "fileFeatureAtom",
   get: async ({ get }) => {
@@ -149,7 +149,7 @@ export const fileFeatureAtom = selector({
     const curMainStep = get(projectMajorStepAtom);
     const curSubStep = get(projectSubStepAtom);
     console.log(record, majorFlows, subFlows, curMainStep, curSubStep);
-    return `科研项目管理/${record.orginateFrom}/${record.name}/${majorFlows[curMainStep].name}/${subFlows[curSubStep].name}`;
+    return `XXX项目管理/${record.orginateFrom}/${record.name}/${majorFlows[curMainStep].name}/${subFlows[curSubStep].name}`;
   },
 });
 
